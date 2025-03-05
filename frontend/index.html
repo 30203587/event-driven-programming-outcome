@@ -11,17 +11,30 @@
 		</style>
 		<script src="tailwindcss.js"></script>
 		<script type="module">
-			const { invoke } = window.__TAURI__.core;
+			const { invoke } = __TAURI__.core;
 			import { html, render, useState, useEffect } from "/htm.js";
 
 
-			function Entry(name) {
-				console.log(name);
-				return html`<input value="${name.name}"></input>`
+			function Display(props) {
+				let elements = [];
+
+				elements.push(html`<div>sdjijaidjisajiji</div>`);
+				elements.push(html`<div>sdjijaidjisajiji</div>`);
+
+				return html`<div>
+					${elements}
+				</div>`;
+			}
+			function Entry(props) {
+				return html`
+				<div class="bg-green-500">
+					<input value="${props.name}"></input>
+				</div>
+				`;
 			}
 			function Main() {
 				let [entries, setEntries] = useState({});
-				let entries_display       = [];
+				let [page, setPage]       = useState(0);
 
 				useEffect(async () => {
 					let all_entries = await invoke("read", {});
@@ -29,16 +42,64 @@
 					setEntries(() => all_entries);
 				}, []);
 
-				for (let [key, value] of Object.entries(entries)) {
-					entries_display.push(html`<${Entry} name=${key}/>`);
-				}
+				if (page === 0) {
+					let entries_display = [];
 
-				return entries_display;
+					for (let [key, value] of Object.entries(entries)) {
+						entries_display.push(html`<${Entry} key=${value.date} name=${key} value=${value}/>`);
+					}
+
+					async function add() {
+						let example = {
+							description: "",
+							date: "",
+							sections: [],
+						};
+
+						await invoke("add", {
+							key: "example",
+							value: example,
+						});
+
+						setEntries(entries => {
+							entries["example"] = example;
+
+							return {...entries}
+						})
+					}
+					async function remove() {
+						await invoke("remove", {
+							key: "example",
+						});
+
+						setEntries(entries => {
+							delete entries["example"];
+
+							return {...entries}
+						})
+					}
+
+					return html`<div class="bg-red-900 grid grid-cols-1 grid-rows-2">
+						<div class="bg-blue-500 flex flex-col">
+						${entries_display}
+						</div>
+						<button onClick=${add}>Add 📄</button>
+						<button onClick=${remove}>Remove 📅</button>
+						<button onClick=${() => setPage(1)}>Set Page 📔</button>
+					</div>`;
+				} else {
+					return html`<${Display} entries=${entries} name=${"example"}/>`
+				}
 			}
 
+			(async () => {
+				await invoke("import_markdown", {
+					markdown: "# asidjsjai",
+				})
+			})()
 
 			render(html`<${Main}/>`, document.body);
 		</script>
 	</head>
-	<body class="bg-red-900 grid grid-cols-2 grid-rows-2"></body>
+	<body></body>
 </html>

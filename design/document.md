@@ -1,10 +1,11 @@
 # User Stories
 
-As a student, I want to be able to edit current diary entries.
-As a student, I want to be able to dynamically edit a diary entry.
 As a reviewer, I want to be able to view progress on a students meta skills.
+As a reviewer, I want to be able view details on a specific entry.
+As a student, I want to be able to dynamically edit a diary entry.
+As a student, I want to be able to edit current diary entries.
 
-# Functional Requirements
+# Requirements
 
 | ID   | Title                  | Description                                                          | Dependencies |
 | ---- | ---------------------- | -------------------------------------------------------------------- | ------------ |
@@ -15,14 +16,20 @@ As a reviewer, I want to be able to view progress on a students meta skills.
 | FR06 | Edit a diary entry | | |
 | FR07 | Save the list of diary entries | | |
 | FR08 | Produce a graph of meta skills progress over the course | | |
-
-# Non-functional Requirements
+| FR09 | Import a markdown file into the list of entries | | |
 
 | ID    | Title         | Description                                                 | Dependencies |
 | ----- | ------------- | ----------------------------------------------------------- | ------------ |
-| NFR01 | Efficiency    | The application can lookup artefacts efficiently            |              |
+| NFR01 | Efficiency    | The application can display specific diary entries efficiently |              |
+| NFR02 | Budget        | The application to conform to budget constraints            |              |
+| NFR03 | Timeslot      | The application to be done within the allocated time period |              |
+| NFR04 | Accessibility | The application to be accessible to different users         |              |
+| NFR05 | Robustness    | The application able to handle erroneous inputs well        |              |
 
 # Wireframes
+
+![List of entries](design/wireframe-1.svg)
+![Specific entry](design/wireframe-2.svg)
 
 # MoSCoW
 
@@ -31,53 +38,22 @@ As a reviewer, I want to be able to view progress on a students meta skills.
 | Must     | |
 | Should   | |
 | Could    | |
-| Won't    |                                           |
+| Won't    | |
 
+# Testing
 
+| ID | Logic | Type   | Parameters | Expected Result |
+| -- | ----- | ------ | ---------- | --------------- |
+| 1  |       | Normal |            |                 |
 
+# Feedback
 
+## Design
+## Programming
+## End User
+## UI
 
+# Documentation
 
-
-
-
-
-
-# Outline
-
-Event Driven Programming
-
-Suggested timeline 2024/2025. The intermediate dates below are suggestions, if you do the work quicker then don’t delay. 
-Everything should be uploaded to Moodle weekending 4th April.
-
-26/02/2025 - Scenarios introduced
-
-
-05/03/2025 - Initial analysis and design complete
-
-• User stories
-• Functional requirements
-• Non-functional requirements
-	• MoSCoW
-• Wireframes (mid-level detail)
-
-
-	11/03/2025 - Sign off on design
-	• Seek feedback on design
-	• Feedback reviewed and evaluated
-
-
-	25/03/2025 - Prototype of application complete
-	• Code complete
-
-
-	26/03/2025 - Testing
-	• Test cases complete
-	• Test run of UI complete
-	• Seek feedback on UI from end users
-
-
-	02/04/2025 - Wrap up
-	• Deployment/publishing details.
-	• Evaluate end user feedback
-	• Writeup evaluation of the project
+## Deployment
+## Evaluation
