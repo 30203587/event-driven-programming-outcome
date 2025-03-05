@@ -1,0 +1,2 @@
+- htm: https://unpkg.com/htm/preact/standalone.module.js
+- Tailwind: https://unpkg.com/@tailwindcss/browser@4.0.9/dist/index.global.js

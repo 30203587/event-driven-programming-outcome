@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				width: 100vw;
+				height: 100vh;
+				margin: 0;
+				display: grid;
+			}
+		</style>
+		<script src="tailwindcss.js"></script>
+		<script type="module">
+			const { invoke } = window.__TAURI__.core;
+			import { html, render, useState, useEffect } from "/htm.js";
+
+
+			function Entry(name) {
+				console.log(name);
+				return html`<input value="${name.name}"></input>`
+			}
+			function Main() {
+				let [entries, setEntries] = useState({});
+				let entries_display       = [];
+
+				useEffect(async () => {
+					let all_entries = await invoke("read", {});
+
+					setEntries(() => all_entries);
+				}, []);
+
+				for (let [key, value] of Object.entries(entries)) {
+					entries_display.push(html`<${Entry} name=${key}/>`);
+				}
+
+				return entries_display;
+			}
+
+
+			render(html`<${Main}/>`, document.body);
+		</script>
+	</head>
+	<body class="bg-red-900 grid grid-cols-2 grid-rows-2"></body>
+</html>
