@@ -41,7 +41,7 @@ fn remove(state: State<Entries>, key: &str) {
 fn import_markdown(state: State<Entries>, markdown: &str) {
 	let ast = tokenize(markdown);
 
-	println!("{:?}", ast);
+	println!("> {:?}", ast);
 	
 	state.lock().unwrap().insert("example".into(), Entry {
 		description: String::new(),
