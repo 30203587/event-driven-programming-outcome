@@ -83,9 +83,9 @@
 						<div class="bg-blue-500 flex flex-col">
 						${entries_display}
 						</div>
-						<button onClick=${add}>Add 📄</button>
-						<button onClick=${remove}>Remove 📅</button>
-						<button onClick=${() => setPage(1)}>Set Page 📔</button>
+						<button onMouseDown=${add}>Add 📄</button>
+						<button onMouseDown=${remove}>Remove 📅</button>
+						<button onMouseDown=${() => setPage(1)}>Set Page 📔</button>
 					</div>`;
 				} else {
 					return html`<${Display} entries=${entries} name=${"example"}/>`
