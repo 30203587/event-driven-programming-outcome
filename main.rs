@@ -1,5 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+// Constants
+
 use markdown::tokenize;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -12,10 +14,13 @@ use serde_json::{to_string, from_slice};
 const ENTRIES_PATH: &str = "entries.json";
 type Entries             = Mutex<HashMap<String, Entry>>;
 
+// Data Structurs
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 enum Element {
-	Lol(String),
-	Yyy,
+	Text(String),
+	Image(String),
+	Heading(String),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24,6 +29,8 @@ struct Entry {
 	date: String,
 	sections: Vec<Element>,
 }
+
+// Functions
 
 #[tauri::command]
 fn read(state: State<Entries>) -> HashMap<String, Entry> {
@@ -41,14 +48,16 @@ fn remove(state: State<Entries>, key: &str) {
 fn import_markdown(state: State<Entries>, markdown: &str) {
 	let ast = tokenize(markdown);
 
-	println!("{:?}", ast);
+	println!("> {:?}", ast);
 	
-	state.lock().unwrap().insert("example".into(), Entry {
+	state.lock().unwrap().insert("example123".into(), Entry {
 		description: String::new(),
 		date: String::new(),
 		sections: vec!(),
 	});
 }
+
+// Main
 
 fn main() {
 	Builder::default()
@@ -62,21 +71,16 @@ fn main() {
 			let mut entries = from_slice::<HashMap<String, Entry>>(&fs_read(ENTRIES_PATH).unwrap()).unwrap();
 
 			entries.insert(
-				"example1".into(),
+				"example".into(),
 				Entry {
 					description: "example_name1".into(),
 					date: "20/20/2025".into(),
 					sections: vec!(
-						Element::Lol("asdsa".to_string()),
+						Element::Image("asdsa".to_string()),
+						Element::Image("asdsa".to_string()),
+						Element::Image("asdsa".to_string()),
+						Element::Image("asdsa".to_string()),
 					),
-				},
-			);
-			entries.insert(
-				"example2".into(),
-				Entry {
-					description: "example_name2".into(),
-					date: "20/20/2023".into(),
-					sections: vec!(),
 				},
 			);
 
