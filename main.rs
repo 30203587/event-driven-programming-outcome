@@ -107,10 +107,6 @@ fn import_markdown(markdown: &str) -> Result<(), String> {
 fn upload_file(paths: State<(PathBuf, PathBuf)>, key: String, data: String) -> Result<(), String> {
     write(format!("{}/{key}", paths.1.display()), data).map_err(|err| err.to_string())
 }
-#[tauri::command]
-fn read_file(paths: State<(PathBuf, PathBuf)>, key: String) -> Result<Vec<u8>, String> {
-    std::fs::read(format!("{}/{key}", paths.1.display())).map_err(|err| err.to_string())
-}
 
 // Main
 

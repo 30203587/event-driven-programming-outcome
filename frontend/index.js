@@ -6,9 +6,9 @@ import { html, render, useState, useEffect } from "/htm.js";
 const PAGE_ENTRY   = 1;
 const PAGE_MANAGER = 0;
 
-const COLOR_ALTERNATIVE = "#ff0000";
-const COLOR_PRIMARY     = "#ff0000";
-const COLOR_SECONDARY   = "#ff0000";
+const COLOR_ALTERNATIVE = "#f61067";
+const COLOR_PRIMARY     = "#4e0250";
+const COLOR_SECONDARY   = "#5c527a";
 
 // Functions
 
@@ -77,6 +77,13 @@ async function what(event, key) {
 		data: data,
 	});
 }
+async function import_markdown(event) {
+	let data = await event.target.files[0].text();
+
+	await invoke("import_markdown", {
+		markdown: data,
+	});
+}
 function insertText(text, setDiary, index, name) {
 	setDiary(diary => {
 		diary.entries[name].sections[index].Text[0] = text;
@@ -116,8 +123,12 @@ function Element(props) {
 	switch (Object.keys(props.section)[0]) {
 		case "Image":
 			contents = html`<div>
+				<image></image>
 				<input type="file" oninput=${event => what(event, props.entryName)}>Insert Image</input>
 			</div>`;
+			break
+		case "Heading":
+			contents = html`<div>${props.section}</div>`;
 			break
 		case "Text":
 			let goals_display = [];
@@ -128,7 +139,7 @@ function Element(props) {
 
 			contents = html`<div>
 				<input class="float-left" oninput=${event => insertText(event.target.value, props.setDiary, props.index, props.entryName)}>${props.section["Text"]}</input>
-				<div class="flex bg-purple-900 float-right">
+				<div class="flex bg-[${COLOR_PRIMARY}] float-right">
 				${goals_display}
 				</div>
 			</div>`;
@@ -139,12 +150,12 @@ function Element(props) {
 }
 function Entry(props) {
 	if (props.example) {
-		return html`<div class="bg-green-600 flex flex-row">
+		return html`<div class="bg-[${COLOR_PRIMARY}] flex flex-row">
 			<p>${props.name}</p>
 			<button onMouseDown=${() => add(props.setDiary, props.entry, props.name)}>Add 📅</button>
 		</div>`;
 	} else {
-		return html`<div class="bg-green-500 flex flex-row">
+		return html`<div class="bg-[${COLOR_PRIMARY}] flex flex-row">
 			<p>${props.name}</p>
 			<button onMouseDown=${() => remove(props.name, props.setDiary)}>Remove 📅</button>
 			<button onMouseDown=${() => props.setPage([ PAGE_ENTRY, props.name ])}>View 📔</button>
@@ -154,12 +165,12 @@ function Entry(props) {
 }
 function Goal(props) {
 	if (props.example) {
-		return html`<div class="bg-green-600 flex flex-row">
+		return html`<div class="text-white flex flex-row">
 			<p>${props.goal}</p>
 			<button onMousedown=${() => addGoal(props.setDiary, props.goal)}>Add 📅</button>
 		</div>`;
 	} else {
-		return html`<div class="bg-green-500 flex flex-row">
+		return html`<div class="text-white flex flex-row">
 			<p>${props.goal}</p>
 			<button onmousedown=${() => removeGoal(props.index, props.setDiary)}>Remove 📅</button>
 		</div>`;
@@ -171,7 +182,9 @@ function DiaryView(props) {
 	let entries_display = [];
 
 	for (let [key, value] of Object.entries(props.diary.entries)) {
-		entries_display.push(html`<${Entry} name=${key} entry=${value} example=${false} setPage=${props.setPage} setDiary=${props.setDiary}/>`);
+		if (key.match(new RegExp(searchName, "g"))) {
+			entries_display.push(html`<${Entry} name=${key} entry=${value} example=${false} setPage=${props.setPage} setDiary=${props.setDiary}/>`);
+		}
 	}
 
 	let example = {
@@ -192,14 +205,17 @@ function DiaryView(props) {
 	}
 	goals_display.push(html`<${Goal} index="${i}" goal="<example>" example=${true} setPage=${props.setPage} setDiary=${props.setDiary}/>`);
 
-	return html`<div class="bg-[${COLOR_PRIMARY}] w-screen h-screen grid grid-rows-[10%_90%] grid-cols-[10%_90%]">
-		<div class="row-span-2">
+	return html`<div class="bg-[${COLOR_PRIMARY}] w-screen h-screen grid grid-rows-[10%_90%] grid-cols-[25%_75%]">
+		<div class="row-span-2 bg-[${COLOR_SECONDARY}]">
+		<p class="text-white">List of SMART Goals:</p>
 		${goals_display}
 		</div>
-		<div class="bg-pink-900">
-			<input onInput=${event => setSearchName(event.target.value)}></input>
+		<div class="bg-[${COLOR_SECONDARY}]">
+			<input onInput=${event => setSearchName(event.target.value)} placeholder="<Enter search entry name here>"></input>
+			<input type="file" oninput=${import_markdown}>Import markdown file</input>
 		</div>
-		<div class="bg-blue-500 flex flex-col">
+		<div class="bg-[${COLOR_PRIMARY}] flex flex-col">
+		<p class="text-white">List of diary entries:</p>
 		${entries_display}
 		</div>
 	</div>`;
@@ -214,11 +230,14 @@ function EntryView(props) {
 		display_elements.push(html`<${Element} section=${props.diary.entries[props.page[1]].sections[i]} index=${i} entryName=${props.page[1]} setDiary=${props.setDiary} goals=${props.diary.goals}/>`);
 	}
 
-	return html`<div class="bg-green-500 grid-cols-1 grid-rows-1 grid w-screen h-screen">
+	return html`<div class="bg-[${COLOR_PRIMARY}] grid-cols-1 grid-rows-[10%_90%] grid w-screen h-screen">
 		<div class="flex flex-row">
-			<input value=${props.page[1]} oninput=${event => setTitle(props.setDiary, props.page[1], event.target.value, props.setPage)}>${props.page[1]}</input>
+			<input value=${props.page[1]} oninput=${event => setTitle(props.setDiary, props.page[1], event.target.value, props.setPage)}></input>
+			<input type="date"></input>
+
 			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Text": ["sadj", []] })}>Add Text</button>
 			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Image": "asjdij" })}>Add Image</button>
+			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Heading": "asjdij" })}>Add Heading</button>
 			<button onmousedown=${() => props.setPage([PAGE_MANAGER, null])}>Back</button>
 		</div>
 		<div class="flex flex-col">
