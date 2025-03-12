@@ -2,59 +2,95 @@
 
 // Constants
 
+use std::{
+	fs::{
+		read as fs_read,
+		write,
+		create_dir_all,
+	},
+
+	path::PathBuf,
+	env::var,
+	collections::HashMap,
+	sync::Mutex,
+};
+use serde::{
+	Deserialize,
+	Serialize,
+};
+use tauri::{
+	Builder,
+	Manager,
+	RunEvent,
+	State,
+
+	generate_context,
+	generate_handler,
+};
+use serde_json::{
+	to_string,
+	from_slice,
+};
 use markdown::tokenize;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::sync::Mutex;
-use std::fs::write;
-use std::fs::read as fs_read;
-use tauri::{generate_context, generate_handler, Builder, Manager, RunEvent, State};
-use serde_json::{to_string, from_slice};
 
-const ENTRIES_PATH: &str = "entries.json";
-type Entries             = Mutex<HashMap<String, Entry>>;
+const ENTRIES_PATH: &str      = "entries.json";
+const FILE_UPLOADS_PATH: &str = "entries";
+const HOME_ENV: &str          = "HOME";
+const PROGRAM_PATH: &str      = "edp-outcome";
 
-// Data Structurs
+// Data Structures
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 enum Element {
-	Text(String),
+	Text(String, Vec<String>),
 	Image(String),
 	Heading(String),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+struct Diary {
+	entries: HashMap<String, Entry>,
+	goals: Vec<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct Entry {
-	description: String,
-	date: String,
+	day: u8,
+	month: u8,
+	year: u64,
 	sections: Vec<Element>,
 }
 
 // Functions
 
 #[tauri::command]
-fn read(state: State<Entries>) -> HashMap<String, Entry> {
+fn read(state: State<Mutex<Diary>>) -> Diary {
 	state.lock().unwrap().clone()
 }
 #[tauri::command]
-fn add(state: State<Entries>, key: String, value: Entry) {
-	state.lock().unwrap().insert(key, value);
+fn insert(state: State<Mutex<Diary>>, key: String, value: Entry) {
+	state.lock().unwrap().entries.insert(key, value);
 }
 #[tauri::command]
-fn remove(state: State<Entries>, key: &str) {
-	state.lock().unwrap().remove(key);
+fn insert_goal(state: State<Mutex<Diary>>, goal: String) {
+	state.lock().unwrap().goals.push(goal)
 }
 #[tauri::command]
-fn import_markdown(state: State<Entries>, markdown: &str) {
+fn remove(state: State<Mutex<Diary>>, key: &str) {
+	state.lock().unwrap().entries.remove(key);
+}
+#[tauri::command]
+fn remove_goal(state: State<Mutex<Diary>>, index: usize) {
+	state.lock().unwrap().goals.remove(index);
+}
+#[tauri::command]
+fn import_markdown(state: State<Mutex<Diary>>, markdown: &str) {
 	let ast = tokenize(markdown);
 
 	println!("> {:?}", ast);
-	
-	state.lock().unwrap().insert("example123".into(), Entry {
-		description: String::new(),
-		date: String::new(),
-		sections: vec!(),
-	});
+}
+#[tauri::command]
+fn upload_file(key: String) {
+	todo!()
 }
 
 // Main
@@ -62,29 +98,33 @@ fn import_markdown(state: State<Entries>, markdown: &str) {
 fn main() {
 	Builder::default()
 		.invoke_handler(generate_handler!(
-			add,
-			read,
 			import_markdown,
+			insert,
+			insert_goal,
+			read,
 			remove,
+			remove_goal,
+			upload_file,
 		))
 		.setup(|application| {
-			let mut entries = from_slice::<HashMap<String, Entry>>(&fs_read(ENTRIES_PATH).unwrap()).unwrap();
+			let program_path = PathBuf::from(format!("{}/{PROGRAM_PATH}", var(HOME_ENV).unwrap()));
+			let entries_path = PathBuf::from(format!("{}/{ENTRIES_PATH}", program_path.display()));
+			let file_uploads_path = PathBuf::from(format!("{}/{FILE_UPLOADS_PATH}", program_path.display()));
 
-			entries.insert(
-				"example".into(),
-				Entry {
-					description: "example_name1".into(),
-					date: "20/20/2025".into(),
-					sections: vec!(
-						Element::Image("asdsa".to_string()),
-						Element::Image("asdsa".to_string()),
-						Element::Image("asdsa".to_string()),
-						Element::Image("asdsa".to_string()),
-					),
-				},
-			);
+			let diary = if entries_path.exists() {
+				from_slice::<Diary>(&fs_read(&entries_path)?)?
+			} else {
+				create_dir_all(&file_uploads_path)?;
 
-			application.manage::<Entries>(Mutex::new(entries));
+				Diary {
+					entries: HashMap::new(),
+					goals: vec!(),
+				}
+			};
+
+
+			application.manage(Mutex::new(diary));
+			application.manage((entries_path, file_uploads_path));
 
 			Ok(())
 		})
@@ -92,10 +132,11 @@ fn main() {
 		.unwrap()
 		.run(|application, event| {
 			if let RunEvent::ExitRequested { .. } = event {
-				let entries = application.state::<Entries>();
-				let entries = entries.lock().unwrap();
+				let (entries_path, _) = &*application.state::<(PathBuf, PathBuf)>();
+				let diary             = application.state::<Mutex<Diary>>();
+				let diary             = diary.lock().unwrap();
 
-				write(ENTRIES_PATH, to_string(&*entries).unwrap()).unwrap();
+				write(&entries_path, to_string(&*diary).unwrap()).unwrap();
 			}
 		})
 }

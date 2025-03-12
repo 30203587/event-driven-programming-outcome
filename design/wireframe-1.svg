@@ -23,10 +23,10 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="px"
-     inkscape:zoom="0.35188692"
-     inkscape:cx="1327.1309"
-     inkscape:cy="169.08841"
-     inkscape:window-width="1920"
+     inkscape:zoom="0.99528651"
+     inkscape:cx="525.47683"
+     inkscape:cy="516.93658"
+     inkscape:window-width="1728"
      inkscape:window-height="1043"
      inkscape:window-x="20"
      inkscape:window-y="20"
@@ -73,13 +73,23 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:13.2292;stroke-dasharray:none;stroke-opacity:1"
-       x="45.027534"
-       y="85.625092"
+       x="132.67073"
+       y="85.246552"
        id="text1-9"><tspan
          sodipodi:role="line"
          id="tspan1-2"
-         x="45.027534"
-         y="85.625092">25/02/2025</tspan></text>
+         x="132.67073"
+         y="85.246552">25/02/2025</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:13.2292;stroke-dasharray:none;stroke-opacity:1"
+       x="51.390739"
+       y="85.246552"
+       id="text1-9-5"><tspan
+         sodipodi:role="line"
+         id="tspan1-2-3"
+         x="51.390739"
+         y="85.246552">&lt;Example title 1&gt;</tspan></text>
     <path
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:13.2292;stroke-dasharray:none;stroke-opacity:1"
        d="M 0,40.904601 H 508"
@@ -91,6 +101,33 @@
        height="40.004993"
        x="33.787296"
        y="62.865002" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:13.2292;stroke-dasharray:none;stroke-opacity:1"
+       x="132.67073"
+       y="142.39656"
+       id="text1-9-9"><tspan
+         sodipodi:role="line"
+         id="tspan1-2-1"
+         x="132.67073"
+         y="142.39656">25/02/2025</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:13.2292;stroke-dasharray:none;stroke-opacity:1"
+       x="51.390739"
+       y="142.39656"
+       id="text1-9-5-2"><tspan
+         sodipodi:role="line"
+         id="tspan1-2-3-7"
+         x="51.390739"
+         y="142.39656">&lt;Example title 2&gt;</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:13.2292;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2-0"
+       width="430.26541"
+       height="40.004993"
+       x="33.787296"
+       y="120.015" />
     <rect
        style="fill:#4c7cff;fill-opacity:1;stroke:none;stroke-width:2.64583;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
        id="rect3"

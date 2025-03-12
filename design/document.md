@@ -1,25 +1,25 @@
 # User Stories
 
-As a reviewer, I want to be able to view progress on a students meta skills over time.
-As a reviewer, I want to be able view details on a specific diary entry.
-As a student, I want to be able to dynamically edit a diary entry.
-As a student, I want to be able to enter my progress on my metaskills.
-As a student, I want to be able to reference my SMART goal on a specific diary entry.
+- As a reviewer, I want to be able to view progress on a students meta skills over time.
+- As a reviewer, I want to be able view details on a specific diary entry.
+- As a student, I want to be able to dynamically edit a diary entry.
+- As a student, I want to be able to enter my progress on my metaskills.
+- As a student, I want to be able to reference my SMART goals on a specific diary entry.
 
 # Requirements
 
-| ID   | Title                                   | Description                                                 | Dependencies |
-| ---- | --------------------------------------- | ----------------------------------------------------------- | ------------ |
-| FR01 | Add diary entry                         | Add a single diary entry to the list of entries             |              |
-| FR02 | Delete diary entry                      | Delete a diary entry from the list of entries               |              |
-| FR03 | View a diary entry                      | View a diary entry's specific details                       | FR01         |
-| FR04 | Sort diary entries                      | Sort all the different diaries based on different criteria  |              |
-| FR05 | Edit a diary entry                      | Edit a specific diary entry                                 | FR01, FR03   |
-| FR06 | Save the list of diary entries          | Save the entire list of diary entries                       | FR01         |
-| FR07 | Produce a graph of meta skills progress | Create a graph of meta skills progress over time            | FR03, FR05   |
-| FR08 | Import a markdown file                  | Import a markdown file from disk and produce a diary entry  | FR01         |
-| FR09 | Reference a SMART goal                  | A diary entry showing which goal was improved on in a diary | FR05         |
-| FR10 | Load list of entries                    | Load all the diary entries from disk                        | FR06         |
+| ID   | Title                | Description                                                 | Dependencies |
+| ---- | -------------------- | ----------------------------------------------------------- | ------------ |
+| FR01 | Add entry            | Add a single diary entry to the list of entries             |              |
+| FR02 | Delete entry         | Delete a diary entry from the list of entries               |              |
+| FR03 | View an entry        | View a diary entry's specific details                       | FR01         |
+| FR04 | Sort entries         | Sort all the different diaries based on different criteria  |              |
+| FR05 | Edit an entry        | Edit a specific diary entry                                 | FR01, FR03   |
+| FR06 | Save entries         | Save the entire list of diary entries                       | FR01         |
+| FR07 | Graph of progress    | Create a graph of meta skills progress over time            | FR03, FR05   |
+| FR08 | Import markdown file | Import a markdown file from disk and produce a diary entry  | FR01         |
+| FR09 | Reference SMART goal | A diary entry showing which goal was improved on in a diary | FR05         |
+| FR10 | Load entries         | Load all the diary entries from disk                        | FR06         |
 
 | ID    | Title         | Description                                                 |
 | ----- | ------------- | ----------------------------------------------------------- |
@@ -31,8 +31,19 @@ As a student, I want to be able to reference my SMART goal on a specific diary e
 
 # Wireframes
 
-![List of entries](design/wireframe-1.svg)
-![Specific entry](design/wireframe-2.svg)
+![Use Case](target/use-case-diagram.svg "Use Case")
+
+![Diary View](design/wireframe-1.svg "Diary View")
+
+- Example titles showscase different entries along with its date
+- Search options displayed a top
+- List of goals showcased on the left
+
+![Entry View](design/wireframe-2.svg "Entry View")
+
+- Title of entry displayed a top
+- Example of text and image showcased
+- Scrollbar showcased on the left to show the reading flow of the document
 
 # MoSCoW
 
