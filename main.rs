@@ -10,7 +10,6 @@ use std::{
 	},
 
 	path::PathBuf,
-	env::var,
 	collections::HashMap,
 	sync::Mutex,
 };
@@ -31,11 +30,15 @@ use serde_json::{
 	to_string,
 	from_slice,
 };
-use markdown::tokenize;
+use markdown::{
+    Block,
+    Span,
+
+    tokenize,
+};
 
 const ENTRIES_PATH: &str      = "entries.json";
 const FILE_UPLOADS_PATH: &str = "entries";
-const HOME_ENV: &str          = "HOME";
 const PROGRAM_PATH: &str      = "edp-outcome";
 
 // Data Structures
@@ -83,14 +86,30 @@ fn remove_goal(state: State<Mutex<Diary>>, index: usize) {
 	state.lock().unwrap().goals.remove(index);
 }
 #[tauri::command]
-fn import_markdown(state: State<Mutex<Diary>>, markdown: &str) {
-	let ast = tokenize(markdown);
+fn import_markdown(markdown: &str) -> Result<(), String> {
+	let tokens = tokenize(markdown);
 
-	println!("> {:?}", ast);
+        for token in tokens {
+            match token {
+                Block::Header(lol, _) => {
+                    let Span::Text(ref text) = lol[0] else { todo!() };
+
+                    println!("{:?}", text);
+                },
+
+                _ => todo!(),
+            }
+        }
+
+        Ok(())
 }
 #[tauri::command]
-fn upload_file(key: String) {
-	todo!()
+fn upload_file(paths: State<(PathBuf, PathBuf)>, key: String, data: String) -> Result<(), String> {
+    write(format!("{}/{key}", paths.1.display()), data).map_err(|err| err.to_string())
+}
+#[tauri::command]
+fn read_file(paths: State<(PathBuf, PathBuf)>, key: String) -> Result<Vec<u8>, String> {
+    std::fs::read(format!("{}/{key}", paths.1.display())).map_err(|err| err.to_string())
 }
 
 // Main
@@ -107,7 +126,7 @@ fn main() {
 			upload_file,
 		))
 		.setup(|application| {
-			let program_path = PathBuf::from(format!("{}/{PROGRAM_PATH}", var(HOME_ENV).unwrap()));
+			let program_path = PathBuf::from(PROGRAM_PATH);
 			let entries_path = PathBuf::from(format!("{}/{ENTRIES_PATH}", program_path.display()));
 			let file_uploads_path = PathBuf::from(format!("{}/{FILE_UPLOADS_PATH}", program_path.display()));
 

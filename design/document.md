@@ -47,18 +47,19 @@
 
 # MoSCoW
 
-| Priority | Requirement                          |
-| -------- | ------------------------------------ |
-| Must     | FR01, FR02, FR03, FR05               |
-| Should   | FR04, FR06, FR07, FR09, NFR01, NFR03 |
-| Could    | FR08, NFR02, NFR04, NFR05            |
-| Won't    |                                      |
+| Priority | Requirement                    |
+| -------- | ------------------------------ |
+| Must     | FR01, FR02, FR03, FR05         |
+| Should   | FR04, FR06, FR09, NFR01, NFR03 |
+| Could    | FR08, NFR02, NFR04, NFR05      |
+| Won't    | FR07                           |
 
 # Testing
 
 | ID | Logic | Type   | Parameters | Expected Result |
 | -- | ----- | ------ | ---------- | --------------- |
-| 1  |       | Normal |            |                 |
+| 1  | Save file to entries      | Normal |            |                 |
+| 1  | Successfully translate markdown file | Normal |            |                 |
 
 # Feedback
 

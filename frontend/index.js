@@ -4,7 +4,6 @@ const { invoke } = __TAURI__.core;
 import { html, render, useState, useEffect } from "/htm.js";
 
 const PAGE_ENTRY   = 1;
-const PAGE_GRAPH   = 2;
 const PAGE_MANAGER = 0;
 
 const COLOR_ALTERNATIVE = "#ff0000";
@@ -58,9 +57,9 @@ async function removeGoal(index, setDiary) {
 		return {...diary}
 	})
 }
-async function addSection(setDiary, key, value) {
-	setDiary(async diary => {
-		await invoke("insert", {
+function addSection(setDiary, key, value) {
+	setDiary(diary => {
+		invoke("insert", {
 			key: key,
 			value: diary.entries[key],
 		});
@@ -70,12 +69,38 @@ async function addSection(setDiary, key, value) {
 		return {...diary}
 	})
 }
-async function what(event) {
-	await event.target.files[0].text();
+async function what(event, key) {
+	let data = await event.target.files[0].text();
+
+	await invoke("upload_file", {
+		key: key,
+		data: data,
+	});
 }
 function insertText(text, setDiary, index, name) {
 	setDiary(diary => {
 		diary.entries[name].sections[index].Text[0] = text;
+
+		return {...diary}
+	})
+}
+function setTitle(setDiary, old_key, new_key, setPage) {
+	setDiary(diary => {
+		let temp = diary.entries[old_key];
+		delete diary.entries[old_key];
+		diary.entries[new_key] = temp;
+
+		return {...diary}
+	});
+	setPage(page => {
+		page[1] = new_key;
+
+		return [...page]
+	});
+}
+function lol(event, setDiary, index) {
+	setDiary(diary => {
+		diary.entries[page[1]].sections[index]
 
 		return {...diary}
 	})
@@ -91,12 +116,21 @@ function Element(props) {
 	switch (Object.keys(props.section)[0]) {
 		case "Image":
 			contents = html`<div>
-				<input type="file" oninput=${what}>Insert Image</input>
+				<input type="file" oninput=${event => what(event, props.entryName)}>Insert Image</input>
 			</div>`;
 			break
 		case "Text":
+			let goals_display = [];
+
+			for (let goal of props.goals) {
+				goals_display.push(html`<input type="checkbox" oninput=${event => lol(event)}>${goal}</input>`)
+			}
+
 			contents = html`<div>
-				<input oninput=${event => insertText(event.target.value, props.setDiary, props.index, props.entryName)}>${props.section["Text"]}</input>
+				<input class="float-left" oninput=${event => insertText(event.target.value, props.setDiary, props.index, props.entryName)}>${props.section["Text"]}</input>
+				<div class="flex bg-purple-900 float-right">
+				${goals_display}
+				</div>
 			</div>`;
 			break
 	}
@@ -114,6 +148,7 @@ function Entry(props) {
 			<p>${props.name}</p>
 			<button onMouseDown=${() => remove(props.name, props.setDiary)}>Remove 📅</button>
 			<button onMouseDown=${() => props.setPage([ PAGE_ENTRY, props.name ])}>View 📔</button>
+			<p>${props.entry.day}.${props.entry.month}.${props.entry.year}</p>
 		</div>`;
 	}
 }
@@ -121,12 +156,12 @@ function Goal(props) {
 	if (props.example) {
 		return html`<div class="bg-green-600 flex flex-row">
 			<p>${props.goal}</p>
-			<button onMouseDown=${() => addGoal(props.setDiary, props.goal)}>Add 📅</button>
+			<button onMousedown=${() => addGoal(props.setDiary, props.goal)}>Add 📅</button>
 		</div>`;
 	} else {
 		return html`<div class="bg-green-500 flex flex-row">
 			<p>${props.goal}</p>
-			<button onMouseDown=${() => removeGoal(props.index, props.setDiary)}>Remove 📅</button>
+			<button onmousedown=${() => removeGoal(props.index, props.setDiary)}>Remove 📅</button>
 		</div>`;
 	}
 }
@@ -163,7 +198,6 @@ function DiaryView(props) {
 		</div>
 		<div class="bg-pink-900">
 			<input onInput=${event => setSearchName(event.target.value)}></input>
-			<button onmousedown=${() => props.setPage([PAGE_GRAPH, null])}>Graph</button>
 		</div>
 		<div class="bg-blue-500 flex flex-col">
 		${entries_display}
@@ -177,27 +211,19 @@ function EntryView(props) {
 	let display_elements = [];
 
 	for (let i = 0; i < props.diary.entries[props.page[1]].sections.length; i++) {
-		display_elements.push(html`<${Element} section=${props.diary.entries[props.page[1]].sections[i]} index=${i} entryName=${props.page[1]} setDiary=${props.setDiary}/>`);
+		display_elements.push(html`<${Element} section=${props.diary.entries[props.page[1]].sections[i]} index=${i} entryName=${props.page[1]} setDiary=${props.setDiary} goals=${props.diary.goals}/>`);
 	}
 
-	return html`<div class="bg-green-500 grid-cols-1 grid-rows-2">
+	return html`<div class="bg-green-500 grid-cols-1 grid-rows-1 grid w-screen h-screen">
+		<div class="flex flex-row">
+			<input value=${props.page[1]} oninput=${event => setTitle(props.setDiary, props.page[1], event.target.value, props.setPage)}>${props.page[1]}</input>
+			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Text": ["sadj", []] })}>Add Text</button>
+			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Image": "asjdij" })}>Add Image</button>
+			<button onmousedown=${() => props.setPage([PAGE_MANAGER, null])}>Back</button>
+		</div>
+		<div class="flex flex-col">
 		${display_elements}
-
-		<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Text": ["sadj", []] })}>Add Text</button>
-		<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Image": "asjdij" })}>Add Image</button>
-	</div>`;
-}
-
-//// Graph
-
-function Graph(props) {
-	console.log(props);
-
-	return html`<div>
-		<button onmousedown=${() => props.setPage([ PAGE_MANAGER, null ])}>Back</button>
-		<svg class="w-screen h-screen">
-			<circle r=45 cx=50 cy=50 fill=red width=100 height=100 class="w-[50%] h-[50%]"></circle>
-		</svg>
+		</div>
 	</div>`;
 }
 
@@ -219,8 +245,6 @@ function App() {
 				return html`<${DiaryView} diary=${diary} setDiary=${setDiary} setPage=${setPage}/>`;
 			case PAGE_ENTRY:
 				return html`<${EntryView} diary=${diary} setDiary=${setDiary} page=${page} setPage=${setPage}/>`;
-			case PAGE_GRAPH:
-				return html`<${Graph} diary=${diary} setDiary=${setDiary} page=${page} setPage=${setPage}/>`;
 		}
 	}
 }
