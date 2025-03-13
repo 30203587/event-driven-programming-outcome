@@ -112,6 +112,28 @@ function lol(event, setDiary, index) {
 		return {...diary}
 	})
 }
+function setDate(date, setDiary, name) {
+	date = new Date(date);
+
+	let day = date.getDate() + 1;
+	let month = date.getMonth() + 1;
+	let year = date.getFullYear();
+
+	invoke("set_date", {
+		entry: name,
+		day: day,
+		month: month,
+		year: year,
+	})
+
+	setDiary(diary => {
+		diary.entries[name].day = day;
+		diary.entries[name].month = month;
+		diary.entries[name].year = year;
+
+		return {...diary}
+	})
+}
 
 // Elements
 
@@ -230,10 +252,16 @@ function EntryView(props) {
 		display_elements.push(html`<${Element} section=${props.diary.entries[props.page[1]].sections[i]} index=${i} entryName=${props.page[1]} setDiary=${props.setDiary} goals=${props.diary.goals}/>`);
 	}
 
+	let display_year = props.diary.entries[props.page[1]].year.toString().padStart(4, "0");
+	let display_day = props.diary.entries[props.page[1]].day.toString().padStart(2, "0");
+	let display_month = props.diary.entries[props.page[1]].month.toString().padStart(2, "0");
+
+	console.log(display_year, display_day, display_month);
+
 	return html`<div class="bg-[${COLOR_PRIMARY}] grid-cols-1 grid-rows-[10%_90%] grid w-screen h-screen">
 		<div class="flex flex-row">
 			<input value=${props.page[1]} oninput=${event => setTitle(props.setDiary, props.page[1], event.target.value, props.setPage)}></input>
-			<input type="date"></input>
+			<input type="date" defaultValue="${display_year}-${display_month}-${display_day}" onInput=${event => setDate(event.target.value, props.setDiary, props.page[1])}></input>
 
 			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Text": ["sadj", []] })}>Add Text</button>
 			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Image": "asjdij" })}>Add Image</button>

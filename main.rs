@@ -82,6 +82,15 @@ fn remove(state: State<Mutex<Diary>>, key: &str) {
 	state.lock().unwrap().entries.remove(key);
 }
 #[tauri::command]
+fn set_date(state: State<Mutex<Diary>>, entry: &str, day: u8, month: u8, year: u64) {
+        let mut state = state.lock().unwrap();
+        let entry = state.entries.get_mut(entry).unwrap();
+
+	entry.day = day;
+	entry.month = month;
+	entry.year = year;
+}
+#[tauri::command]
 fn remove_goal(state: State<Mutex<Diary>>, index: usize) {
 	state.lock().unwrap().goals.remove(index);
 }
@@ -119,6 +128,7 @@ fn main() {
 			read,
 			remove,
 			remove_goal,
+			set_date,
 			upload_file,
 		))
 		.setup(|application| {
