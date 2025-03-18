@@ -9,6 +9,7 @@ use std::{
 		create_dir_all,
 	},
 
+
 	path::PathBuf,
 	collections::HashMap,
 	sync::Mutex,
@@ -31,10 +32,10 @@ use serde_json::{
 	from_slice,
 };
 use markdown::{
-    Block,
-    Span,
+	Block,
+	Span,
 
-    tokenize,
+	tokenize,
 };
 
 const ENTRIES_PATH: &str      = "entries.json";
@@ -63,7 +64,14 @@ struct Entry {
 	sections: Vec<Element>,
 }
 
-// Functions
+// Test Functions
+
+#[test]
+fn what() {
+	println!("{:?}", 32);
+}
+
+// Executable Functions
 
 #[tauri::command]
 fn read(state: State<Mutex<Diary>>) -> Diary {
@@ -83,12 +91,12 @@ fn remove(state: State<Mutex<Diary>>, key: &str) {
 }
 #[tauri::command]
 fn set_date(state: State<Mutex<Diary>>, entry: &str, day: u8, month: u8, year: u64) {
-        let mut state = state.lock().unwrap();
-        let entry = state.entries.get_mut(entry).unwrap();
+	let mut state = state.lock().unwrap();
+	let entry = state.entries.get_mut(entry).unwrap();
 
-	entry.day = day;
+	entry.day   = day;
 	entry.month = month;
-	entry.year = year;
+	entry.year  = year;
 }
 #[tauri::command]
 fn remove_goal(state: State<Mutex<Diary>>, index: usize) {
@@ -98,23 +106,27 @@ fn remove_goal(state: State<Mutex<Diary>>, index: usize) {
 fn import_markdown(markdown: &str) -> Result<(), String> {
 	let tokens = tokenize(markdown);
 
-        for token in tokens {
-            match token {
-                Block::Header(lol, _) => {
-                    let Span::Text(ref text) = lol[0] else { todo!() };
+	for token in tokens {
+		match token {
+			Block::Header(lol, _) => {
+				let Span::Text(ref text) = lol[0] else { todo!() };
 
-                    println!("{:?}", text);
-                },
+				println!("{:?}", text);
+			},
 
-                _ => todo!(),
-            }
-        }
+			_ => todo!(),
+		}
+	}
 
-        Ok(())
+	Ok(())
 }
 #[tauri::command]
 fn upload_file(paths: State<(PathBuf, PathBuf)>, key: String, data: String) -> Result<(), String> {
-    write(format!("{}/{key}", paths.1.display()), data).map_err(|err| err.to_string())
+	write(format!("{}/{key}", paths.1.display()), data).map_err(|err| err.to_string())
+}
+#[tauri::command]
+fn set_goal_name(diary: State<Mutex<Diary>>, index: usize, value: String) {
+	diary.lock().unwrap().goals[index] = value
 }
 
 // Main
@@ -122,14 +134,15 @@ fn upload_file(paths: State<(PathBuf, PathBuf)>, key: String, data: String) -> R
 fn main() {
 	Builder::default()
 		.invoke_handler(generate_handler!(
-			import_markdown,
-			insert,
-			insert_goal,
-			read,
-			remove,
-			remove_goal,
-			set_date,
-			upload_file,
+				import_markdown,
+				insert,
+				insert_goal,
+				read,
+				remove,
+				remove_goal,
+				set_date,
+				upload_file,
+				set_goal_name,
 		))
 		.setup(|application| {
 			let program_path = PathBuf::from(PROGRAM_PATH);
@@ -153,7 +166,7 @@ fn main() {
 
 			Ok(())
 		})
-		.build(generate_context!())
+	.build(generate_context!())
 		.unwrap()
 		.run(|application, event| {
 			if let RunEvent::ExitRequested { .. } = event {

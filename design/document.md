@@ -1,3 +1,10 @@
+# Description
+
+The application itself is to be made for students who are looking to document
+their progress over their time on the course, taking notes on which areas in
+their SMART goals they improved on a specific entry. A reviewer can look into
+which SMART goals are being progressed on throughout the time on the course.
+
 # User Stories
 
 - As a reviewer, I want to be able to view progress on a students meta skills over time.
@@ -35,15 +42,7 @@
 
 ![Diary View](design/wireframe-1.svg "Diary View")
 
-- Example titles showscase different entries along with its date
-- Search options displayed a top
-- List of goals showcased on the left
-
 ![Entry View](design/wireframe-2.svg "Entry View")
-
-- Title of entry displayed a top
-- Example of text and image showcased
-- Scrollbar showcased on the left to show the reading flow of the document
 
 # MoSCoW
 
@@ -56,9 +55,9 @@
 
 # Testing
 
-| ID | Logic | Type   | Parameters | Expected Result |
-| -- | ----- | ------ | ---------- | --------------- |
-| 1  | Save file to entries      | Normal |            |                 |
+| ID | Logic                                | Type   | Parameters | Expected Result |
+| -- | ------------------------------------ | ------ | ---------- | --------------- |
+| 1  | Save file to entries                 | Normal |            |                 |
 | 1  | Successfully translate markdown file | Normal |            |                 |
 
 # Feedback

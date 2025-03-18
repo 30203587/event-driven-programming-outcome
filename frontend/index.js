@@ -134,24 +134,33 @@ function setDate(date, setDiary, name) {
 		return {...diary}
 	})
 }
+async function setGoalName(setDiary, index, value) {
+	invoke("set_goal_name", {
+		index: index,
+		value: value,
+	})
+
+	setDiary(diary => {
+		diary.goals[index] = value
+
+		return { ...diary }
+	})
+}
 
 // Elements
 
 //// Diary View (design/wireframe-1.svg)
 
 function Element(props) {
-	let contents;
-
 	switch (Object.keys(props.section)[0]) {
 		case "Image":
-			contents = html`<div>
+			return html`<div>
 				<image></image>
 				<input type="file" oninput=${event => what(event, props.entryName)}>Insert Image</input>
 			</div>`;
 			break
 		case "Heading":
-			contents = html`<div>${props.section}</div>`;
-			break
+			return html`<div>${props.section}</div>`;
 		case "Text":
 			let goals_display = [];
 
@@ -159,16 +168,13 @@ function Element(props) {
 				goals_display.push(html`<input type="checkbox" oninput=${event => lol(event)}>${goal}</input>`)
 			}
 
-			contents = html`<div>
+			return html`<div>
 				<input class="float-left" oninput=${event => insertText(event.target.value, props.setDiary, props.index, props.entryName)}>${props.section["Text"]}</input>
 				<div class="flex bg-[${COLOR_PRIMARY}] float-right">
 				${goals_display}
 				</div>
 			</div>`;
-			break
 	}
-
-	return contents
 }
 function Entry(props) {
 	if (props.example) {
@@ -193,7 +199,7 @@ function Goal(props) {
 		</div>`;
 	} else {
 		return html`<div class="text-white flex flex-row">
-			<p>${props.goal}</p>
+			<input oninput=${event => setGoalName(props.setDiary, props.index, event.target.value)} value=${props.goal}></input>
 			<button onmousedown=${() => removeGoal(props.index, props.setDiary)}>Remove 📅</button>
 		</div>`;
 	}
@@ -252,11 +258,9 @@ function EntryView(props) {
 		display_elements.push(html`<${Element} section=${props.diary.entries[props.page[1]].sections[i]} index=${i} entryName=${props.page[1]} setDiary=${props.setDiary} goals=${props.diary.goals}/>`);
 	}
 
-	let display_year = props.diary.entries[props.page[1]].year.toString().padStart(4, "0");
-	let display_day = props.diary.entries[props.page[1]].day.toString().padStart(2, "0");
+	let display_day   = props.diary.entries[props.page[1]].day.toString().padStart(2, "0");
 	let display_month = props.diary.entries[props.page[1]].month.toString().padStart(2, "0");
-
-	console.log(display_year, display_day, display_month);
+	let display_year  = props.diary.entries[props.page[1]].year.toString().padStart(4, "0");
 
 	return html`<div class="bg-[${COLOR_PRIMARY}] grid-cols-1 grid-rows-[10%_90%] grid w-screen h-screen">
 		<div class="flex flex-row">
