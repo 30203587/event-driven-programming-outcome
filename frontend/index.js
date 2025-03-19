@@ -69,6 +69,18 @@ function addSection(setDiary, key, value) {
 		return {...diary}
 	})
 }
+function removeSection(setDiary, key, index) {
+	setDiary(diary => {
+		diary.entries[key].sections.splice(index, 1);
+
+		invoke("insert", {
+			key: key,
+			value: diary.entries[key],
+		});
+
+		return {...diary}
+	})
+}
 async function uploadFile(event, setDiary, index, key) {
 	let file = event.target.files[0];
 
@@ -82,7 +94,7 @@ async function uploadFile(event, setDiary, index, key) {
 		name: file.name,
 		index: index,
 		key: key,
-		data: await file.text(),
+		data: await file.arrayBuffer(),
 	}).then(() => {})
 	.catch((error) => console.log(error))
 }
@@ -180,18 +192,20 @@ async function setGoalName(setDiary, index, value) {
 //// Diary View (design/wireframe-1.svg)
 
 function Element(props) {
+	let contents;
+
 	switch (Object.keys(props.section)[0]) {
 		case "Image":
-			let ddd = convertFileSrc(`/Users/30203587/edp-outcome/entries/${props.section.Image}`);
+			let fileSource = convertFileSrc(`/Users/30203587/edp-outcome/entries/${props.section.Image}`);
 
-			console.log(ddd);
-
-			return html`<div>
-				<img src="${ddd}"></img>
+			contents = html`<div>
+				<img src="${fileSource}"></img>
 				<input type="file" oninput=${event => uploadFile(event, props.setDiary, props.index, props.entryName)}>Insert Image</input>
 			</div>`;
+			break
 		case "Heading":
-			return html`<div>${props.section["Heading"]}</div>`;
+			contents = html`<div>${props.section["Heading"]}</div>`;
+			break
 		case "Text":
 			let goals_display = [];
 
@@ -199,13 +213,19 @@ function Element(props) {
 				goals_display.push(html`<input type="checkbox" oninput=${event => lol(event)}>${goal}</input>`)
 			}
 
-			return html`<div>
+			contents = html`<div>
 				<input class="float-left" oninput=${event => insertText(event.target.value, props.setDiary, props.index, props.entryName)}>${props.section["Text"]}</input>
 				<div class="flex bg-[${COLOR_PRIMARY}] float-right">
 				${goals_display}
 				</div>
 			</div>`;
+			break
 	}
+
+	return html`<div>
+	${contents}
+	<button onmousedown=${() => removeSection(props.setDiary, props.entryName, props.index)}>X</button>
+	</div>`
 }
 function Entry(props) {
 	if (props.example) {
@@ -297,7 +317,7 @@ function EntryView(props) {
 			<input type="date" defaultValue="${display_year}-${display_month}-${display_day}" onInput=${event => setDate(event.target.value, props.setDiary, props.page[1])}></input>
 
 			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Text": ["sadj", []] })}>Add Text</button>
-			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Image": "asjdij" })}>Add Image</button>
+			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Image": "Untitled.png" })}>Add Image</button>
 			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Heading": "asjdij" })}>Add Heading</button>
 			<button onmousedown=${() => props.setPage([PAGE_MANAGER, null])}>Back</button>
 		</div>

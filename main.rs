@@ -135,7 +135,7 @@ fn import_markdown(diary: State<Mutex<Diary>>, markdown: &str) -> Result<Vec<Ele
 	Ok(sections)
 }
 #[tauri::command]
-fn upload_file(diary: State<Mutex<Diary>>, paths: State<(PathBuf, PathBuf)>, key: String, index: usize, name: String, data: String) -> Result<(), String> {
+fn upload_file(diary: State<Mutex<Diary>>, paths: State<(PathBuf, PathBuf)>, key: String, index: usize, name: String, data: Vec<u8>) -> Result<(), String> {
     let mut diary = diary.lock().unwrap();
     let entry = diary.entries.get_mut(&key).unwrap();
 
