@@ -13,6 +13,7 @@ use std::{
 	path::PathBuf,
 	collections::HashMap,
 	sync::Mutex,
+        env::var,
 };
 use serde::{
 	Deserialize,
@@ -41,6 +42,8 @@ use markdown::{
 const ENTRIES_PATH: &str      = "entries.json";
 const FILE_UPLOADS_PATH: &str = "entries";
 const PROGRAM_PATH: &str      = "edp-outcome";
+#[cfg(target_os = "windows")] const HOME: &str = "UserProfile";
+#[cfg(target_os = "linux")] const HOME: &str = "HOME";
 
 // Data Structures
 
@@ -125,6 +128,10 @@ fn upload_file(paths: State<(PathBuf, PathBuf)>, key: String, data: String) -> R
 	write(format!("{}/{key}", paths.1.display()), data).map_err(|err| err.to_string())
 }
 #[tauri::command]
+fn get_paths(paths: State<(PathBuf, PathBuf)>) -> (PathBuf, PathBuf) {
+    (*paths).clone()
+}
+#[tauri::command]
 fn set_goal_name(diary: State<Mutex<Diary>>, index: usize, value: String) {
 	diary.lock().unwrap().goals[index] = value
 }
@@ -141,11 +148,12 @@ fn main() {
 				remove,
 				remove_goal,
 				set_date,
+                                get_paths,
 				upload_file,
 				set_goal_name,
 		))
 		.setup(|application| {
-			let program_path = PathBuf::from(PROGRAM_PATH);
+			let program_path = PathBuf::from(format!("{}/{PROGRAM_PATH}", var(HOME)?));
 			let entries_path = PathBuf::from(format!("{}/{ENTRIES_PATH}", program_path.display()));
 			let file_uploads_path = PathBuf::from(format!("{}/{FILE_UPLOADS_PATH}", program_path.display()));
 

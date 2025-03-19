@@ -1,7 +1,14 @@
 // Constants
 
-const { invoke } = __TAURI__.core;
+const { invoke, convertFileSrc } = __TAURI__.core;
 import { html, render, useState, useEffect } from "/htm.js";
+
+//let ddd = convertFileSrc("C:/Users/30203587/edp-outcome/entries/untitled.png");
+//console.log(ddd);
+//
+//let ppp = document.createElement("img");
+//ppp.src = ddd;
+//document.body.appendChild(ppp);
 
 const PAGE_ENTRY   = 1;
 const PAGE_MANAGER = 0;
@@ -72,10 +79,11 @@ function addSection(setDiary, key, value) {
 async function what(event, key) {
 	let data = await event.target.files[0].text();
 
-	await invoke("upload_file", {
+	invoke("upload_file", {
 		key: key,
 		data: data,
-	});
+	}).then(() => {})
+	.catch((error) => console.log(error))
 }
 async function import_markdown(event) {
 	let data = await event.target.files[0].text();
@@ -160,7 +168,7 @@ function Element(props) {
 			</div>`;
 			break
 		case "Heading":
-			return html`<div>${props.section}</div>`;
+			return html`<div>${props.section["Heading"]}</div>`;
 		case "Text":
 			let goals_display = [];
 
@@ -219,9 +227,9 @@ function DiaryView(props) {
 		description: "",
 		date: "",
 		sections: [],
-		day: 0,
-		month: 0,
-		year: 0,
+		day: 1,
+		month: 1,
+		year: 2000,
 	};
 	entries_display.push(html`<${Entry} name="<example>" entry=${example} example=${true} setPage=${props.setPage} setDiary=${props.setDiary}/>`);
 
