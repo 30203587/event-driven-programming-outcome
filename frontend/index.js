@@ -2,13 +2,13 @@
 
 const { invoke, convertFileSrc } = __TAURI__.core;
 import { html, render, useState, useEffect } from "/htm.js";
-//
-let ddd = convertFileSrc("C:/Users/30203587/edp-outcome/entries/Untitled.png");
-console.log(ddd);
 
-let ppp = document.createElement("img");
-ppp.src = ddd;
-document.body.appendChild(ppp);
+//let ddd = convertFileSrc("/Users/30203587/edp-outcome/entries/Untitled.png");
+//console.log(ddd);
+//
+//let ppp = document.createElement("img");
+//ppp.src = ddd;
+//document.body.appendChild(ppp);
 
 const PAGE_ENTRY   = 1;
 const PAGE_MANAGER = 0;
@@ -194,13 +194,12 @@ async function setGoalName(setDiary, index, value) {
 function Element(props) {
 	switch (Object.keys(props.section)[0]) {
 		case "Image":
-			console.log(`C:/Users/30203587/edp-outcome/entries/${props.section.Image}`);
-			let ddd = convertFileSrc(`C:/Users/30203587/edp-outcome/entries/${props.section.Image}`);
+			let ddd = convertFileSrc(`/Users/30203587/edp-outcome/entries/${props.section.Image}`);
 
 			console.log(ddd);
 
 			return html`<div>
-				<image src="${ddd}"></image>
+				<img src="${ddd}"></img>
 				<input type="file" oninput=${event => uploadFile(event, props.setDiary, props.index, props.entryName)}>Insert Image</input>
 			</div>`;
 		case "Heading":
