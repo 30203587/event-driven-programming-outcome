@@ -3,13 +3,6 @@
 const { invoke, convertFileSrc } = __TAURI__.core;
 import { html, render, useState, useEffect } from "/htm.js";
 
-//let ddd = convertFileSrc("/Users/30203587/edp-outcome/entries/Untitled.png");
-//console.log(ddd);
-//
-//let ppp = document.createElement("img");
-//ppp.src = ddd;
-//document.body.appendChild(ppp);
-
 const PAGE_ENTRY   = 1;
 const PAGE_MANAGER = 0;
 
@@ -96,11 +89,11 @@ async function uploadFile(event, setDiary, index, key) {
 async function import_markdown(event) {
 	let data = await event.target.files[0].text();
 
-	data = await invoke("import_markdown", {
+	sections = await invoke("import_markdown", {
 		markdown: data,
 	});
 	let example = {
-		sections: [],
+		sections: sections,
 		day: 1,
 		month: 1,
 		year: 2000,
@@ -108,12 +101,7 @@ async function import_markdown(event) {
 
 	await invoke("insert", {
 		key: "<imported_markdown>",
-		value: {
-			sections: [],
-			day: 1,
-			month: 1,
-			year: 2000,
-		},
+		value: example,
 	});
 
 	setDiary(diary => {

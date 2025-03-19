@@ -112,22 +112,27 @@ fn remove_goal(state: State<Mutex<Diary>>, index: usize) {
 	state.lock().unwrap().goals.remove(index);
 }
 #[tauri::command]
-fn import_markdown(markdown: &str) -> Result<(), String> {
-	let tokens = tokenize(markdown);
+fn import_markdown(diary: State<Mutex<Diary>>, markdown: &str) -> Result<Vec<Element>, String> {
+        let mut sections = vec!();
 
-	for token in tokens {
+	for token in tokenize(markdown) {
 		match token {
 			Block::Header(lol, _) => {
 				let Span::Text(ref text) = lol[0] else { todo!() };
 
-				println!("{:?}", text);
+                                sections.push(Element::Heading(text.to_string()));
 			},
+                        Block::Paragraph(span) => {
+                            for element in span {
+                            }
+                        }
+                        Block::UnorderedList(span) => {},
 
-			_ => todo!(),
+                        _ => todo!()
 		}
 	}
 
-	Ok(())
+	Ok(sections)
 }
 #[tauri::command]
 fn upload_file(diary: State<Mutex<Diary>>, paths: State<(PathBuf, PathBuf)>, key: String, index: usize, name: String, data: String) -> Result<(), String> {
