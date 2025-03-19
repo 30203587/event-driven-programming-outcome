@@ -2,13 +2,13 @@
 
 const { invoke, convertFileSrc } = __TAURI__.core;
 import { html, render, useState, useEffect } from "/htm.js";
-
-//let ddd = convertFileSrc("C:/Users/30203587/edp-outcome/entries/untitled.png");
-//console.log(ddd);
 //
-//let ppp = document.createElement("img");
-//ppp.src = ddd;
-//document.body.appendChild(ppp);
+let ddd = convertFileSrc("C:/Users/30203587/edp-outcome/entries/Untitled.png");
+console.log(ddd);
+
+let ppp = document.createElement("img");
+ppp.src = ddd;
+document.body.appendChild(ppp);
 
 const PAGE_ENTRY   = 1;
 const PAGE_MANAGER = 0;
@@ -66,31 +66,63 @@ async function removeGoal(index, setDiary) {
 }
 function addSection(setDiary, key, value) {
 	setDiary(diary => {
+		diary.entries[key].sections.push(value);
+
 		invoke("insert", {
 			key: key,
 			value: diary.entries[key],
 		});
 
-		diary.entries[key].sections.push(value);
-
 		return {...diary}
 	})
 }
-async function what(event, key) {
-	let data = await event.target.files[0].text();
+async function uploadFile(event, setDiary, index, key) {
+	let file = event.target.files[0];
+
+	await setDiary(diary => {
+		diary.entries[key].sections[index]["Image"] = file.name;
+
+		return {...diary}
+	})
 
 	invoke("upload_file", {
+		name: file.name,
+		index: index,
 		key: key,
-		data: data,
+		data: await file.text(),
 	}).then(() => {})
 	.catch((error) => console.log(error))
 }
 async function import_markdown(event) {
 	let data = await event.target.files[0].text();
 
-	await invoke("import_markdown", {
+	data = await invoke("import_markdown", {
 		markdown: data,
 	});
+	let example = {
+		sections: [],
+		day: 1,
+		month: 1,
+		year: 2000,
+	}
+
+	await invoke("insert", {
+		key: "<imported_markdown>",
+		value: {
+			sections: [],
+			day: 1,
+			month: 1,
+			year: 2000,
+		},
+	});
+
+	setDiary(diary => {
+		diary.entries[key] = entry;
+
+		return {...diary}
+	})
+
+
 }
 function insertText(text, setDiary, index, name) {
 	setDiary(diary => {
@@ -162,11 +194,15 @@ async function setGoalName(setDiary, index, value) {
 function Element(props) {
 	switch (Object.keys(props.section)[0]) {
 		case "Image":
+			console.log(`C:/Users/30203587/edp-outcome/entries/${props.section.Image}`);
+			let ddd = convertFileSrc(`C:/Users/30203587/edp-outcome/entries/${props.section.Image}`);
+
+			console.log(ddd);
+
 			return html`<div>
-				<image></image>
-				<input type="file" oninput=${event => what(event, props.entryName)}>Insert Image</input>
+				<image src="${ddd}"></image>
+				<input type="file" oninput=${event => uploadFile(event, props.setDiary, props.index, props.entryName)}>Insert Image</input>
 			</div>`;
-			break
 		case "Heading":
 			return html`<div>${props.section["Heading"]}</div>`;
 		case "Text":
@@ -224,8 +260,6 @@ function DiaryView(props) {
 	}
 
 	let example = {
-		description: "",
-		date: "",
 		sections: [],
 		day: 1,
 		month: 1,
