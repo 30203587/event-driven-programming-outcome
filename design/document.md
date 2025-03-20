@@ -40,6 +40,8 @@ which SMART goals are being progressed on throughout the time on the course.
 
 ![Use Case](target/use-case-diagram.svg "Use Case")
 
+![State](target/state.svg "State")
+
 ![Diary View](design/wireframe-1.svg "Diary View")
 
 ![Entry View](design/wireframe-2.svg "Entry View")
@@ -75,3 +77,17 @@ which SMART goals are being progressed on throughout the time on the course.
 - Tailwind: https://unpkg.com/@tailwindcss/browser@4.0.9/dist/index.global.js
 
 ## Evaluation
+
+# Meetings
+
+| Chair/Designer | Attendees | Topic                                                                     |
+| -------------- | --------- | ------------------------------------------------------------------------- |
+| Ethan Reynard | Alan Hart  | Review User Interface (UI) design documentation and requirements document |
+ 
+## Actions
+- Non func reqs, can you make them all specific. ie 'not within budget' but 'within budget amount of £0'
+- Wireframes. How do you add new goals? 
+- Need extra commentary on how to select a task and move to the next screen, and move back.
+- Decide on name of second screen so that it can be consistently referred to in the documentation.
+- user diagram missing extend and include commentary
+- Needs state diagram added before final submission

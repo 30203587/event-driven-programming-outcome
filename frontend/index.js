@@ -6,9 +6,8 @@ import { html, render, useState, useEffect } from "/htm.js";
 const PAGE_ENTRY   = 1;
 const PAGE_MANAGER = 0;
 
-const COLOR_ALTERNATIVE = "#f61067";
-const COLOR_PRIMARY     = "#4e0250";
-const COLOR_SECONDARY   = "#5c527a";
+const COLOR_PRIMARY     = "#344966";
+const COLOR_SECONDARY   = "#FF6666";
 
 // Functions
 
@@ -51,11 +50,11 @@ async function removeGoal(index, setDiary) {
 		index: index,
 	});
 
-	setDiary(diary => {
+	await setDiary(diary => {
 		diary.goals.splice(index, 1);
 
 		return {...diary}
-	})
+	});
 }
 function addSection(setDiary, key, value) {
 	setDiary(diary => {
@@ -70,6 +69,8 @@ function addSection(setDiary, key, value) {
 	})
 }
 function removeSection(setDiary, key, index) {
+	console.log(index);
+
 	setDiary(diary => {
 		diary.entries[key].sections.splice(index, 1);
 
@@ -78,7 +79,7 @@ function removeSection(setDiary, key, index) {
 			value: diary.entries[key],
 		});
 
-		return {...diary}
+		return { ...diary }
 	})
 }
 async function uploadFile(event, setDiary, index, key) {
@@ -87,7 +88,7 @@ async function uploadFile(event, setDiary, index, key) {
 	await setDiary(diary => {
 		diary.entries[key].sections[index]["Image"] = file.name;
 
-		return {...diary}
+		return { ...diary }
 	})
 
 	invoke("upload_file", {
@@ -98,10 +99,10 @@ async function uploadFile(event, setDiary, index, key) {
 	}).then(() => {})
 	.catch((error) => console.log(error))
 }
-async function import_markdown(event) {
+async function import_markdown(event, setDiary) {
 	let data = await event.target.files[0].text();
 
-	sections = await invoke("import_markdown", {
+	let sections = await invoke("import_markdown", {
 		markdown: data,
 	});
 	let example = {
@@ -110,23 +111,22 @@ async function import_markdown(event) {
 		month: 1,
 		year: 2000,
 	}
+	let key = "<imported_markdown>";
 
 	await invoke("insert", {
-		key: "<imported_markdown>",
+		key: key,
 		value: example,
 	});
 
 	setDiary(diary => {
-		diary.entries[key] = entry;
+		diary.entries[key] = example;
 
 		return {...diary}
 	})
-
-
 }
 function insertText(text, setDiary, index, name) {
 	setDiary(diary => {
-		diary.entries[name].sections[index].Text[0] = text;
+		diary.entries[name].sections[index]["Text"] = text;
 
 		return {...diary}
 	})
@@ -214,7 +214,7 @@ function Element(props) {
 			}
 
 			contents = html`<div>
-				<input class="float-left" oninput=${event => insertText(event.target.value, props.setDiary, props.index, props.entryName)}>${props.section["Text"]}</input>
+				<input class="float-left" oninput=${event => insertText(event.target.value, props.setDiary, props.index, props.entryName)} value="${props.section["Text"]}"></input>
 				<div class="flex bg-[${COLOR_PRIMARY}] float-right">
 				${goals_display}
 				</div>
@@ -224,6 +224,7 @@ function Element(props) {
 
 	return html`<div>
 	${contents}
+
 	<button onmousedown=${() => removeSection(props.setDiary, props.entryName, props.index)}>X</button>
 	</div>`
 }
@@ -287,9 +288,13 @@ function DiaryView(props) {
 		<p class="text-white">List of SMART Goals:</p>
 		${goals_display}
 		</div>
-		<div class="bg-[${COLOR_SECONDARY}]">
+		<div class="bg-[${COLOR_SECONDARY}] flex flex-row overflow-hidden justify-between p-[1%]">
 			<input onInput=${event => setSearchName(event.target.value)} placeholder="<Enter search entry name here>"></input>
-			<input type="file" oninput=${import_markdown}>Import markdown file</input>
+			<input type="file" oninput=${event => import_markdown(event, props.setDiary)}>Import Markdown File</input>
+			<div class="hover:w-[50%] hover:h-[200%] hover:bg-[${COLOR_PRIMARY}]">
+				<p>asjdjiasjid</p>
+				<p class="float-right">?</p>
+			</div>
 		</div>
 		<div class="bg-[${COLOR_PRIMARY}] flex flex-col">
 		<p class="text-white">List of diary entries:</p>
@@ -316,13 +321,14 @@ function EntryView(props) {
 			<input value=${props.page[1]} oninput=${event => setTitle(props.setDiary, props.page[1], event.target.value, props.setPage)}></input>
 			<input type="date" defaultValue="${display_year}-${display_month}-${display_day}" onInput=${event => setDate(event.target.value, props.setDiary, props.page[1])}></input>
 
-			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Text": ["sadj", []] })}>Add Text</button>
-			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Image": "Untitled.png" })}>Add Image</button>
-			<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Heading": "asjdij" })}>Add Heading</button>
 			<button onmousedown=${() => props.setPage([PAGE_MANAGER, null])}>Back</button>
 		</div>
 		<div class="flex flex-col">
 		${display_elements}
+
+		<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Text": ["<Example Text>", []] })}>Add Text</button>
+		<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Image": "Untitled.png" })}>Add Image</button>
+		<button onmousedown=${() => addSection(props.setDiary, props.page[1], { "Heading": "<Example Heading>" })}>Add Heading</button>
 		</div>
 	</div>`;
 }

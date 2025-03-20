@@ -3,40 +3,43 @@
 // Imports
 
 use std::{
-	fs::{
-		read as fs_read,
-		write,
-		create_dir_all,
-	},
+    fs::{
+        read as fs_read,
+        write,
+        create_dir_all,
+    },
 
 
-	path::PathBuf,
-	collections::HashMap,
-	sync::Mutex,
-        env::var,
+    path::PathBuf,
+    collections::HashMap,
+    sync::Mutex,
+    env::var,
 };
 use serde::{
-	Deserialize,
-	Serialize,
+    Deserialize,
+    Serialize,
 };
 use tauri::{
-	Builder,
-	Manager,
-	RunEvent,
-	State,
+    Builder,
+    Manager,
+    RunEvent,
+    State,
 
-	generate_context,
-	generate_handler,
+    generate_context,
+    generate_handler,
 };
 use serde_json::{
-	to_string,
-	from_slice,
+    to_string,
+    from_slice,
 };
 use markdown::{
-	Block,
-	Span,
+    Block,
+    Span,
 
-	tokenize,
+    tokenize,
+};
+use proptest::{
+    prelude::*,
 };
 
 // Constants
@@ -52,87 +55,89 @@ const PROGRAM_PATH: &str      = "edp-outcome";
 // Stores data added to a diary entry.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 enum Element {
-	Text(String, Vec<String>),
-	Image(String),
-	Heading(String),
+    Text(String, Vec<String>),
+    Image(String),
+    Heading(String),
 }
 
 // Stores the list of entries and goals for the application.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Diary {
-	entries: HashMap<String, Entry>,
-	goals: Vec<String>,
+    entries: HashMap<String, Entry>,
+    goals: Vec<String>,
 }
 // A single diary entry that stores when it was entered along with the sections used.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Entry {
-	day: u8, // Starts from 1 (1-31)
-	month: u8, // Starts from 1 (1-12)
-	year: u64,
-	sections: Vec<Element>,
+    day: u8, // Starts from 1 (1-31)
+    month: u8, // Starts from 1 (1-12)
+    year: u64,
+    sections: Vec<Element>,
 }
 
 // Test Functions
 
-#[test]
-fn what() {
-	println!("{:?}", 32);
+proptest! {
+    #[test]
+    fn test_import_markdown(a in "asijdii") {
+        assert!(true)
+    }
 }
 
 // Executable Functions
 
 #[tauri::command]
 fn read(state: State<Mutex<Diary>>) -> Diary {
-        // Unwrapping lock used as it is very unlikely the program panics when using one
-	state.lock().unwrap().clone()
+    // Unwrapping lock used as it is very unlikely the program panics when using one
+    state.lock().unwrap().clone()
 }
 #[tauri::command]
 fn insert(state: State<Mutex<Diary>>, key: String, value: Entry) {
-	state.lock().unwrap().entries.insert(key, value);
+    state.lock().unwrap().entries.insert(key, value);
 }
 #[tauri::command]
 fn insert_goal(state: State<Mutex<Diary>>, goal: String) {
-	state.lock().unwrap().goals.push(goal)
+    state.lock().unwrap().goals.push(goal)
 }
 #[tauri::command]
 fn remove(state: State<Mutex<Diary>>, key: &str) {
-	state.lock().unwrap().entries.remove(key);
+    state.lock().unwrap().entries.remove(key);
 }
 #[tauri::command]
 fn set_date(state: State<Mutex<Diary>>, entry: &str, day: u8, month: u8, year: u64) {
-	let mut state = state.lock().unwrap();
-	let entry = state.entries.get_mut(entry).unwrap();
+    let mut state = state.lock().unwrap();
+    let entry = state.entries.get_mut(entry).unwrap();
 
-	entry.day   = day;
-	entry.month = month;
-	entry.year  = year;
+    entry.day   = day;
+    entry.month = month;
+    entry.year  = year;
 }
 #[tauri::command]
 fn remove_goal(state: State<Mutex<Diary>>, index: usize) {
-	state.lock().unwrap().goals.remove(index);
+    state.lock().unwrap().goals.remove(index);
 }
 #[tauri::command]
-fn import_markdown(diary: State<Mutex<Diary>>, markdown: &str) -> Result<Vec<Element>, String> {
-        let mut sections = vec!();
+fn import_markdown(markdown: &str) -> Result<Vec<Element>, String> {
+    let mut sections = vec!();
 
-	for token in tokenize(markdown) {
-		match token {
-			Block::Header(lol, _) => {
-				let Span::Text(ref text) = lol[0] else { todo!() };
+    for token in tokenize(markdown) {
+        match token {
+            Block::Header(lol, _) => {
+                let Span::Text(ref text) = lol[0] else { todo!() };
 
-                                sections.push(Element::Heading(text.to_string()));
-			},
-                        Block::Paragraph(span) => {
-                            for element in span {
-                            }
-                        }
-                        Block::UnorderedList(span) => {},
+                sections.push(Element::Heading(text.to_string()));
+            },
+            Block::Paragraph(span) => {
+                for element in span {
+                }
+            }
+            Block::UnorderedList(span) => {},
 
-                        _ => todo!()
-		}
-	}
+            _ => todo!()
+        }
+    }
 
-	Ok(sections)
+    Ok(sections)
 }
 #[tauri::command]
 fn upload_file(diary: State<Mutex<Diary>>, paths: State<(PathBuf, PathBuf)>, key: String, index: usize, name: String, data: Vec<u8>) -> Result<(), String> {
@@ -149,9 +154,9 @@ fn get_paths(paths: State<(PathBuf, PathBuf)>) -> (PathBuf, PathBuf) {
 }
 #[tauri::command]
 fn set_goal_name(diary: State<Mutex<Diary>>, index: usize, value: String) -> Option<()> {
-	*diary.lock().unwrap().goals.get_mut(index)? = value;
+    *diary.lock().unwrap().goals.get_mut(index)? = value;
 
-        None
+    None
 }
 
 // Main
@@ -197,18 +202,16 @@ fn main() {
 
             Ok(())
         })
-        .build(generate_context!())
+    .build(generate_context!())
         .unwrap()
-        .run(|application, event| {
-            if let RunEvent::ExitRequested { .. } = event {
-                // Retrieve paths used for 
-                let (entries_path, _) = &*application.state::<(PathBuf, PathBuf)>();
-                let diary             = application.state::<Mutex<Diary>>();
-                let diary             = diary.lock().unwrap();
+        .run(|application, event| if let RunEvent::ExitRequested { .. } = event {
+            // Retrieve paths used for 
+            let (entries_path, _) = &*application.state::<(PathBuf, PathBuf)>();
+            let diary             = application.state::<Mutex<Diary>>();
+            let diary             = diary.lock().unwrap();
 
-                // Unwraps used as the program is already exiting so it doesn't
-                // matter whether the application crashed or not as this time
-                write(&entries_path, to_string(&*diary).unwrap()).unwrap();
-            }
+            // Unwraps used as the program is already exiting so it doesn't
+            // matter whether the application crashed or not as this time
+            write(&entries_path, to_string(&*diary).unwrap()).unwrap();
         })
 }
