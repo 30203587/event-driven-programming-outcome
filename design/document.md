@@ -83,6 +83,7 @@ keyboards, with the logo being with a diamond that used to symbolize it.
 | UI Logic           | Preact, htm | https://preactjs.com, https://unpkg.com/htm/preact/standalone.module.js                    |
 | UI Styling         | Tailwind    | https://tailwindcss.com, https://unpkg.com/@tailwindcss/browser@4.0.9/dist/index.global.js |
 | Cross Platform GUI | Tauri       | https://tauri.app                                                                          |
+| Logo Conversions   | ImageMagick | https://imagemagick.org                                                                    |
 
 ## Evaluation
 
