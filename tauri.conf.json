@@ -27,7 +27,10 @@
   },
   "bundle": {
     "active": true,
-    "icon": ["icons/icon.ico"],
+    "icon": [
+			"target/icon.ico",
+			"target/icon.png"
+		],
     "resources": ["frontend/*"],
     "targets": "all"
   }

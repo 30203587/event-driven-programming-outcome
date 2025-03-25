@@ -95,8 +95,8 @@ keyboards, with the logo being with a diamond that used to symbolize it.
 - Topic: Review User Interface (UI) design documentation and requirements document
 
 - [x] Non func reqs, can you make them all specific. ie 'not within budget' but 'within budget amount of £0'
-- [ ] Wireframes. How do you add new goals? 
-- [ ] Need extra commentary on how to select a task and move to the next screen, and move back.
+- [x] Wireframes. How do you add new goals? 
+- [x] Need extra commentary on how to select a task and move to the next screen, and move back.
 - [x] Decide on name of second screen so that it can be consistently referred to in the documentation.
 - [x] user diagram missing extend and include commentary
 - [x] Needs state diagram added before final submission
