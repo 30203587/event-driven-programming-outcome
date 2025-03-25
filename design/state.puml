@@ -1,0 +1,26 @@
+@startuml
+
+state Diary_Exists <<choice>>
+
+[*] -> Diary_Exists : Import Markdown
+
+Diary_Exists -> Error : Exists
+Error --> [*]
+
+state Tokenize {
+	state Match_Token <<choice>>
+
+	Diary_Exists -> Loop_Over_Tokens : Doesnt Exist
+	Loop_Over_Tokens -> Match_Token
+
+	Match_Token -> Add_Section_Element : Heading -> Heading
+	Match_Token -> Add_Section_Element : Image -> Text
+	Match_Token -> Add_Section_Element : Text -> Text
+
+	Add_Section_Element -> Loop_Over_Tokens
+}
+
+Loop_Over_Tokens -> Create_New_Entry : If Done Looping
+Create_New_Entry --> [*]
+
+@enduml

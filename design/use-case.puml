@@ -22,25 +22,25 @@ Reviewer --> FR04
 Reviewer --> FR06
 Reviewer --> FR07
 Reviewer --> FR09
-Student --> FR01
-Student --> FR02
-Student --> FR03
-Student --> FR04
-Student --> FR05
-Student --> FR06
-Student --> FR08
-Student --> FR09
-Student --> FR10
+Student  --> FR01
+Student  --> FR02
+Student  --> FR03
+Student  --> FR04
+Student  --> FR05
+Student  --> FR06
+Student  --> FR08
+Student  --> FR09
+Student  --> FR10
 
-FR03 -u.> FR01
-FR05 -u.> FR01
-FR05 -u.> FR03
-FR06 -u.> FR01
-FR07 -u.> FR03
-FR07 -u.> FR05
-FR08 -u.> FR01
-FR09 -u.> FR05
-FR10 -u.> FR06
+FR03 -u.> FR01 : <<includes>>
+FR05 -u.> FR01 : <<includes>>
+FR05 -u.> FR03 : <<includes>>
+FR06 -u.> FR01 : <<includes>>
+FR07 -u.> FR03 : <<includes>>
+FR07 -u.> FR05 : <<includes>>
+FR08 -u.> FR01 : <<includes>>
+FR09 -u.> FR05 : <<includes>>
+FR10 -u.> FR06 : <<includes>>
 
 note right of FR09
 	Trigger Event: Reference SMART GOAL

@@ -84,6 +84,11 @@ proptest! {
     }
 }
 
+#[test]
+fn insert_goal() {
+	println!("{:?}", 32);
+}
+
 // Executable Functions
 
 #[tauri::command]
