@@ -189,7 +189,7 @@ async function setGoalName(setDiary, index, value) {
 
 // Elements
 
-//// Diary View (design/wireframe-1.svg)
+//// Diary View (design/diary-view.svg)
 
 function Element(props) {
 	let contents;
@@ -261,7 +261,8 @@ function DiaryView(props) {
 
 	let entries_display = [];
 
-	for (let [key, value] of Object.entries(props.diary.entries)) {
+	let entries_array = Object.entries(props.diary.entries);
+	for (let [key, value] of entries_array) {
 		if (key.match(new RegExp(searchName, "g"))) {
 			entries_display.push(html`<${Entry} name=${key} entry=${value} example=${false} setPage=${props.setPage} setDiary=${props.setDiary}/>`);
 		}
@@ -283,6 +284,12 @@ function DiaryView(props) {
 	}
 	goals_display.push(html`<${Goal} index="${i}" goal="<example>" example=${true} setPage=${props.setPage} setDiary=${props.setDiary}/>`);
 
+	if (entries_array.length == 0) {
+		entries_display.push(html`<div class="bg-purple-500">
+			<img src="/logo.svg" />
+		</div>`);
+	}
+
 	return html`<div class="bg-[${COLOR_PRIMARY}] w-screen h-screen grid grid-rows-[10%_90%] grid-cols-[25%_75%]">
 		<div class="row-span-2 bg-[${COLOR_SECONDARY}]">
 		<p class="text-white">List of SMART Goals:</p>
@@ -291,10 +298,6 @@ function DiaryView(props) {
 		<div class="bg-[${COLOR_SECONDARY}] flex flex-row overflow-hidden justify-between p-[1%]">
 			<input onInput=${event => setSearchName(event.target.value)} placeholder="<Enter search entry name here>"></input>
 			<input type="file" oninput=${event => import_markdown(event, props.setDiary)}>Import Markdown File</input>
-			<div class="hover:w-[50%] hover:h-[200%] hover:bg-[${COLOR_PRIMARY}]">
-				<p>asjdjiasjid</p>
-				<p class="float-right">?</p>
-			</div>
 		</div>
 		<div class="bg-[${COLOR_PRIMARY}] flex flex-col">
 		<p class="text-white">List of diary entries:</p>
@@ -303,7 +306,7 @@ function DiaryView(props) {
 	</div>`;
 }
 
-//// Entry View (design/wireframe-2.svg)
+//// Entry View (design/entry-view.svg)
 
 function EntryView(props) {
 	let display_elements = [];

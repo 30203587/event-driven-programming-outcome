@@ -85,8 +85,13 @@ proptest! {
 }
 
 #[test]
-fn insert_goal() {
-	println!("{:?}", 32);
+fn test_insert_goal() {
+	let diary = Diary {
+		entries: HashMap::new(),
+		goals: vec!(),
+	};
+
+	insert_goal();
 }
 
 // Executable Functions
