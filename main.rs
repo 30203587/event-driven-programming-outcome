@@ -46,7 +46,7 @@ use proptest::{
 
 const ENTRIES_PATH: &str      = "entries.json";
 const FILE_UPLOADS_PATH: &str = "entries";
-const PROGRAM_PATH: &str      = "edp-outcome";
+const PROGRAM_NAME: &str      = "metakey";
 #[cfg(target_os = "windows")] const HOME: &str = "UserProfile";
 #[cfg(target_os = "linux")] const HOME: &str = "HOME";
 
@@ -73,6 +73,26 @@ struct Entry {
     month: u8, // Starts from 1 (1-12)
     year: u64,
     sections: Vec<Element>,
+}
+
+fn match_span(span: Span) -> Vec<Element> {
+    let mut elements = vec!();
+
+    match span {
+        Span::Break => {},
+        Span::Text(text) => elements.push(Element::Text(text, vec!())),
+        Span::Code(text) => elements.push(Element::Text(text, vec!())),
+        Span::Link(text, _, _)  => elements.push(Element::Text(text, vec!())),
+        Span::Image(text, _, _) => elements.push(Element::Text(text, vec!())),
+        Span::Emphasis(span) => for element in span {
+            elements.extend(match_span(element))
+        },
+        Span::Strong(span) => for element in span {
+            elements.extend(match_span(element))
+        },
+    }
+
+    elements
 }
 
 // Test Functions
@@ -132,18 +152,18 @@ fn import_markdown(markdown: &str) -> Result<Vec<Element>, String> {
 
     for token in tokenize(markdown) {
         match token {
-            Block::Header(lol, _) => {
-                let Span::Text(ref text) = lol[0] else { todo!() };
-
-                sections.push(Element::Heading(text.to_string()));
+            Block::Header(span, _) => for element in span {
+                sections.extend(match_span(element))
             },
-            Block::Paragraph(span) => {
-                for element in span {
-                }
-            }
+            Block::Paragraph(span) => for element in span {
+                sections.extend(match_span(element))
+            },
             Block::UnorderedList(span) => {},
-
-            _ => todo!()
+            Block::Blockquote(span) => {},
+            Block::CodeBlock(_, _) => {},
+            Block::OrderedList(_, _) => {},
+            Block::Raw(_) => {},
+            Block::Hr => {},
         }
     }
 
@@ -189,7 +209,7 @@ fn main() {
         ))
         .setup(|application| {
             // Constructing paths used for stores the applications data
-            let program_path = PathBuf::from(format!("{}/{PROGRAM_PATH}", var(HOME)?));
+            let program_path = PathBuf::from(format!("{}/{PROGRAM_NAME}", var(HOME)?));
             let entries_path = PathBuf::from(format!("{}/{ENTRIES_PATH}", program_path.display()));
             let file_uploads_path = PathBuf::from(format!("{}/{FILE_UPLOADS_PATH}", program_path.display()));
 
