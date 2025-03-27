@@ -45,7 +45,7 @@ keyboards, with the logo being with a diamond that used to symbolize it.
 
 ![State](target/state.svg "State")
 
-![Logo](design/logo.svg "Logo")
+![Logo](frontend/logo.svg "Logo")
 
 ![Diary View](design/diary-view.svg "Diary View")
 
