@@ -55,7 +55,7 @@ const PROGRAM_NAME: &str      = "metakey";
 // Stores data added to a diary entry.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 enum Element {
-    Text(String, Vec<String>),
+    Text(String),
     Image(String),
     Heading(String),
 }
@@ -80,10 +80,10 @@ fn match_span(span: Span) -> Vec<Element> {
 
     match span {
         Span::Break => {},
-        Span::Text(text) => elements.push(Element::Text(text, vec!())),
-        Span::Code(text) => elements.push(Element::Text(text, vec!())),
-        Span::Link(text, _, _)  => elements.push(Element::Text(text, vec!())),
-        Span::Image(text, _, _) => elements.push(Element::Text(text, vec!())),
+        Span::Text(text) => elements.push(Element::Text(text)),
+        Span::Code(text) => elements.push(Element::Text(text)),
+        Span::Link(text, _, _)  => elements.push(Element::Text(text)),
+        Span::Image(text, _, _) => elements.push(Element::Text(text)),
         Span::Emphasis(span) => for element in span {
             elements.extend(match_span(element))
         },

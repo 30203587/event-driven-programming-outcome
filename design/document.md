@@ -6,7 +6,7 @@ their SMART goals they improved upon, documenting it within an entry which the
 student can edit with real-time feedback on how its displayed. A reviewer can
 look into which SMART goals are being progressed on throughout the time on the
 course. The application is called MetaKey, named after the meta key on old
-keyboards, with the logo being with a diamond that used to symbolize it.
+keyboards, with the logo being with a diamond to symbolize it.
 
 # User Stories
 
@@ -47,13 +47,20 @@ Use case diagram for the function and non-function requirements.
 
 ![State](target/state.svg)
 
-State diagram for the 
+State diagram for FR08.
 
 ![Logo](frontend/logo.svg)
 
+Logo for the application, converted to different formats based on target
+platform.
+
 ![Diary View](design/diary-view.svg)
 
+Diary View for the application, launched on startup.
+
 ![Entry View](design/entry-view.svg)
+
+Entry View for the application, launched when viewing an entry.
 
 # MoSCoW
 
@@ -68,20 +75,19 @@ State diagram for the
 
 | ID | Logic                                | Type   | Parameters | Expected Result |
 | -- | ------------------------------------ | ------ | ---------- | --------------- |
-| 1  | Save file to entries                 | Normal |            |                 |
+| 1  | Save entry to diary                  | Normal |            |                 |
+| 1  | Save goal to diary                   | Normal |            |                 |
 | 2  | Successfully translate markdown file | Normal |            |                 |
 
 # Feedback
 
 ## Did the design meet the client requirements?
 
-b. The initial design was peer reviewed, and feedback provided. Did this change
-your design or the way that you implemented the design? What did change?
-c. Did the UX testing highlight any possible improvements that could be made.
-Did the user testing uncover any bugs not detected in your functional
-testing?
-d. Anything that you would like to do differently or something that you thought
-worked well and you would do again?
+## The initial design was peer reviewed, and feedback provided. Did this change your design or the way that you implemented the design? What did change?
+
+## Did the UX testing highlight any possible improvements that could be made. Did the user testing uncover any bugs not detected in your functional testing?
+
+## Anything that you would like to do differently or something that you thought worked well and you would do again?
 
 ## Design
 ## Programming
@@ -92,12 +98,19 @@ worked well and you would do again?
 
 ## Sources
 
+### Mandatory
+
 | Purpose            | Name        | Link                                                                                       |
 | ------------------ | ----------- | ------------------------------------------------------------------------------------------ |
 | UI Logic           | Preact, htm | https://preactjs.com, https://unpkg.com/htm/preact/standalone.module.js                    |
 | UI Styling         | Tailwind    | https://tailwindcss.com, https://unpkg.com/@tailwindcss/browser@4.0.9/dist/index.global.js |
 | Cross Platform GUI | Tauri       | https://tauri.app                                                                          |
-| Logo Conversions   | ImageMagick | https://imagemagick.org                                                                    |
+
+### Optional
+
+| Purpose            | Name        | Link                    |
+| ------------------ | ----------- | ----------------------- |
+| Logo Conversions   | ImageMagick | https://imagemagick.org |
 
 ## Evaluation
 
