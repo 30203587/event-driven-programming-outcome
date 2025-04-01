@@ -41,15 +41,19 @@ keyboards, with the logo being with a diamond that used to symbolize it.
 
 # Diagrams
 
-![Use Case](target/use-case-diagram.svg "Use Case")
+![Use Case](target/use-case-diagram.svg)
 
-![State](target/state.svg "State")
+Use case diagram for the function and non-function requirements.
 
-![Logo](design/logo.svg "Logo")
+![State](target/state.svg)
 
-![Diary View](design/diary-view.svg "Diary View")
+State diagram for the 
 
-![Entry View](design/entry-view.svg "Entry View")
+![Logo](design/logo.svg)
+
+![Diary View](design/diary-view.svg)
+
+![Entry View](design/entry-view.svg)
 
 # MoSCoW
 
@@ -68,6 +72,16 @@ keyboards, with the logo being with a diamond that used to symbolize it.
 | 2  | Successfully translate markdown file | Normal |            |                 |
 
 # Feedback
+
+## Did the design meet the client requirements?
+
+b. The initial design was peer reviewed, and feedback provided. Did this change
+your design or the way that you implemented the design? What did change?
+c. Did the UX testing highlight any possible improvements that could be made.
+Did the user testing uncover any bugs not detected in your functional
+testing?
+d. Anything that you would like to do differently or something that you thought
+worked well and you would do again?
 
 ## Design
 ## Programming
