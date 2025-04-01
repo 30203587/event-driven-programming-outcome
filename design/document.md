@@ -49,7 +49,7 @@ Use case diagram for the function and non-function requirements.
 
 State diagram for the 
 
-![Logo](design/logo.svg)
+![Logo](frontend/logo.svg)
 
 ![Diary View](design/diary-view.svg)
 

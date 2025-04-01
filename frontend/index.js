@@ -286,7 +286,8 @@ function DiaryView(props) {
 
 	if (entries_array.length == 0) {
 		entries_display.push(html`<div class="bg-purple-500">
-			<img src="/logo.svg" />
+			<img src="/logo.svg" class="w-[75%] h-[75%]"/>
+			<p>Help message</p>
 		</div>`);
 	}
 
