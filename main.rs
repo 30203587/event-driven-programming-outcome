@@ -1,3 +1,4 @@
+// Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // Imports
@@ -9,9 +10,8 @@ use std::{
         create_dir_all,
     },
 
-
-    path::PathBuf,
     collections::HashMap,
+    path::PathBuf,
     sync::Mutex,
     env::var,
 };
@@ -38,9 +38,7 @@ use markdown::{
 
     tokenize,
 };
-use proptest::{
-    prelude::*,
-};
+use proptest::prelude::*;
 
 // Constants
 
@@ -52,7 +50,7 @@ const PROGRAM_NAME: &str      = "metakey";
 
 // Data Structures
 
-// Stores data added to a diary entry.
+// Stores data added to a diary entry
 #[derive(Debug, Clone, Serialize, Deserialize)]
 enum Element {
     Text(String),
@@ -60,61 +58,71 @@ enum Element {
     Heading(String),
 }
 
-// Stores the list of entries and goals for the application.
+// Stores the list of entries and goals for the application
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Diary {
     entries: HashMap<String, Entry>,
     goals: Vec<String>,
 }
-// A single diary entry that stores when it was entered along with the sections used.
+// A single diary entry that stores when it was entered along with the sections used
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Entry {
     day: u8, // Starts from 1 (1-31)
     month: u8, // Starts from 1 (1-12)
     year: u64,
     sections: Vec<Element>,
+    fulfilled_goals: HashMap<String, ()>,
 }
 
-fn match_span(span: Span) -> Vec<Element> {
-    let mut elements = vec!();
 
-    match span {
-        Span::Break => {},
-        Span::Text(text) => elements.push(Element::Text(text)),
-        Span::Code(text) => elements.push(Element::Text(text)),
-        Span::Link(text, _, _)  => elements.push(Element::Text(text)),
-        Span::Image(text, _, _) => elements.push(Element::Text(text)),
-        Span::Emphasis(span) => for element in span {
-            elements.extend(match_span(element))
-        },
-        Span::Strong(span) => for element in span {
-            elements.extend(match_span(element))
-        },
+impl Diary {
+    fn import_markdown(markdown: &str) -> Vec<Element> {
+        let mut sections = vec!();
+
+        for token in tokenize(markdown) {
+            match token {
+                Block::Header(span, _) => for element in span {
+                    sections.extend(Diary::match_span(element))
+                },
+                Block::Paragraph(span) => for element in span {
+                    sections.extend(Diary::match_span(element))
+                },
+                Block::UnorderedList(span) => {},
+                Block::Blockquote(span) => {},
+                Block::CodeBlock(_, _) => {},
+                Block::OrderedList(_, _) => {},
+                Block::Raw(_) => {},
+                Block::Hr => {},
+            }
+        }
+
+        sections
     }
+    fn match_span(span: Span) -> Vec<Element> {
+        let mut elements = vec!();
 
-    elements
-}
+        match span {
+            Span::Break => {},
+            Span::Text(text) => elements.push(Element::Text(text)),
+            Span::Code(text) => elements.push(Element::Text(text)),
+            Span::Link(text, _, _)  => elements.push(Element::Text(text)),
+            Span::Image(text, _, _) => elements.push(Element::Text(text)),
+            Span::Emphasis(span) => for element in span {
+                elements.extend(Self::match_span(element))
+            },
+            Span::Strong(span) => for element in span {
+                elements.extend(Self::match_span(element))
+            },
+        }
 
-// Test Functions
-
-proptest! {
-    #[test]
-    fn test_import_markdown(a in "asijdii") {
-        assert!(true)
+        elements
+    }
+    fn insert_goal(&mut self, goal: String) {
+        self.goals.push(goal)
     }
 }
 
-#[test]
-fn test_insert_goal() {
-	let diary = Diary {
-		entries: HashMap::new(),
-		goals: vec!(),
-	};
-
-	insert_goal();
-}
-
-// Executable Functions
+// Endpoints
 
 #[tauri::command]
 fn read(state: State<Mutex<Diary>>) -> Diary {
@@ -127,7 +135,7 @@ fn insert(state: State<Mutex<Diary>>, key: String, value: Entry) {
 }
 #[tauri::command]
 fn insert_goal(state: State<Mutex<Diary>>, goal: String) {
-    state.lock().unwrap().goals.push(goal)
+    state.lock().unwrap().insert_goal(goal)
 }
 #[tauri::command]
 fn remove(state: State<Mutex<Diary>>, key: &str) {
@@ -147,30 +155,11 @@ fn remove_goal(state: State<Mutex<Diary>>, index: usize) {
     state.lock().unwrap().goals.remove(index);
 }
 #[tauri::command]
-fn import_markdown(markdown: &str) -> Result<Vec<Element>, String> {
-    let mut sections = vec!();
-
-    for token in tokenize(markdown) {
-        match token {
-            Block::Header(span, _) => for element in span {
-                sections.extend(match_span(element))
-            },
-            Block::Paragraph(span) => for element in span {
-                sections.extend(match_span(element))
-            },
-            Block::UnorderedList(span) => {},
-            Block::Blockquote(span) => {},
-            Block::CodeBlock(_, _) => {},
-            Block::OrderedList(_, _) => {},
-            Block::Raw(_) => {},
-            Block::Hr => {},
-        }
-    }
-
-    Ok(sections)
+fn import_markdown(markdown: &str) -> Vec<Element> {
+    Diary::import_markdown(markdown)
 }
 #[tauri::command]
-fn upload_file(diary: State<Mutex<Diary>>, paths: State<(PathBuf, PathBuf)>, key: String, index: usize, name: String, data: Vec<u8>) -> Result<(), String> {
+fn upload_file(diary: State<Mutex<Diary>>, paths: State<(PathBuf, PathBuf, PathBuf)>, key: String, index: usize, name: String, data: Vec<u8>) -> Result<(), String> {
     let mut diary = diary.lock().unwrap();
     let entry = diary.entries.get_mut(&key).unwrap();
 
@@ -179,7 +168,7 @@ fn upload_file(diary: State<Mutex<Diary>>, paths: State<(PathBuf, PathBuf)>, key
     write(format!("{}/{name}", paths.1.display()), data).map_err(|err| err.to_string())
 }
 #[tauri::command]
-fn get_paths(paths: State<(PathBuf, PathBuf)>) -> (PathBuf, PathBuf) {
+fn get_paths(paths: State<(PathBuf, PathBuf, PathBuf)>) -> (PathBuf, PathBuf, PathBuf) {
     (*paths).clone()
 }
 #[tauri::command]
@@ -188,8 +177,37 @@ fn set_goal_name(diary: State<Mutex<Diary>>, index: usize, value: String) -> Opt
 
     None
 }
+#[tauri::command]
+fn fulfill_goal(diary: State<Mutex<Diary>>, goal: String, entry_name: String) {
+    let mut diary = diary.lock().unwrap();
+    let entry = diary.entries.get_mut(&entry_name).unwrap();
 
-// Main
+    if entry.fulfilled_goals.contains_key(&goal) {
+        entry.fulfilled_goals.remove(&goal);
+    } else {
+        entry.fulfilled_goals.insert(goal, ());
+    }
+}
+
+// Testing
+
+proptest! {
+    #[test]
+    fn test_insert_goal(input in "abcd") {
+	let mut diary = Diary {
+		entries: HashMap::new(),
+		goals: vec!(),
+	};
+
+	diary.insert_goal(input)
+    }
+    #[test]
+    fn test_import_markdown(input in "# asdsa") {
+        Diary::import_markdown(&input);
+    }
+}
+
+// Application
 
 fn main() {
     // Builds the GUI application
@@ -206,6 +224,7 @@ fn main() {
                 get_paths,
                 upload_file,
                 set_goal_name,
+                fulfill_goal,
         ))
         .setup(|application| {
             // Constructing paths used for stores the applications data
@@ -226,19 +245,21 @@ fn main() {
                 }
             };
 
-
+            // Mutex used to fulfill Send + Sync requirement on endpoints, even though the
+            // application doesn't currently invoke endpoints in parallel
             application.manage(Mutex::new(diary));
-            application.manage((entries_path, file_uploads_path));
+            application.manage((entries_path, file_uploads_path, program_path));
 
             Ok(())
         })
     .build(generate_context!())
         .unwrap()
         .run(|application, event| if let RunEvent::ExitRequested { .. } = event {
-            // Retrieve paths used for 
-            let (entries_path, _) = &*application.state::<(PathBuf, PathBuf)>();
-            let diary             = application.state::<Mutex<Diary>>();
-            let diary             = diary.lock().unwrap();
+            // Gets the paths for used for the application, and writes the diary to it when the
+            // user exists the application
+            let (entries_path, ..) = &*application.state::<(PathBuf, PathBuf, PathBuf)>();
+            let diary              = application.state::<Mutex<Diary>>();
+            let diary              = diary.lock().unwrap();
 
             // Unwraps used as the program is already exiting so it doesn't
             // matter whether the application crashed or not as this time

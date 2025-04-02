@@ -73,11 +73,30 @@ Entry View for the application, launched when viewing an entry.
 
 # Testing
 
-| ID | Logic                                | Type   | Parameters | Expected Result |
-| -- | ------------------------------------ | ------ | ---------- | --------------- |
-| 1  | Save entry to diary                  | Normal |            |                 |
-| 1  | Save goal to diary                   | Normal |            |                 |
-| 2  | Successfully translate markdown file | Normal |            |                 |
+## Automated
+
+| ID | Logic               | Type   | Input | Output |
+| -- | ------------------- | ------ | ----- | ------ |
+| A1 | Save entry to diary | Normal |       |        |
+| A2 | Save goal to diary  | Normal |       |        |
+| A3 | Import markdown     | Normal |       |        |
+
+## Manual
+
+| ID  | Logic                 | Type   | Before | After |
+| --- | --------------------- | ------ | ------ | ----- |
+| M01 | Import markdown file  | Normal |        |       |
+| M03 | Add goal to diary     | Normal |        |       |
+| M04 | Add entry to diary    | Normal |        |       |
+| M05 | Remove entry          | Normal |        |       |
+| M06 | Insert text           | Normal |        |       |
+| M07 | Insert image          | Normal |        |       |
+| M08 | Insert heading        | Normal |        |       |
+| M09 | Change name of entry  | Normal |        |       |
+| M10 | Change date of entry  | Normal |        |       |
+| M12 | Go to view entry      | Normal |        |       |
+| M13 | Search entries        | Normal |        |       |
+| M14 | Back to diary view    | Normal |        |       |
 
 # Feedback
 
@@ -88,11 +107,6 @@ Entry View for the application, launched when viewing an entry.
 ## Did the UX testing highlight any possible improvements that could be made. Did the user testing uncover any bugs not detected in your functional testing?
 
 ## Anything that you would like to do differently or something that you thought worked well and you would do again?
-
-## Design
-## Programming
-## End User
-## UI
 
 # Documentation
 
