@@ -298,7 +298,7 @@ function DiaryView(props) {
 
 	if (entries_array.length == 0) {
 		entries_display.push(html`<div class="bg-purple-500">
-			<img src="/logo.svg" class="w-[50%] h-[50%]"/>
+			<img src="/logo.svg"/>
 			<p>${HELP_MESSAGE}</p>
 		</div>`);
 	}
@@ -309,8 +309,8 @@ function DiaryView(props) {
 		${goals_display}
 		</div>
 		<div class="bg-[${COLOR_SECONDARY}] flex flex-row overflow-hidden justify-between p-[1%]">
-			<input class="w-[25%]" onInput=${event => setSearchName(event.target.value)} placeholder="<Search for entry name here\>"></input>
-			<input type="file" oninput=${event => import_markdown(event, props.setDiary)}>Import Markdown File</input>
+			<input class="w-[50%]" onInput=${event => setSearchName(event.target.value)} placeholder="<Search for entry name here\>"></input>
+			<input class="w-[50%]" type="file" oninput=${event => import_markdown(event, props.setDiary)}>Import Markdown File</input>
 		</div>
 		<div class="bg-[${COLOR_PRIMARY}] flex flex-col">
 		<p class="text-white">List of diary entries:</p>
