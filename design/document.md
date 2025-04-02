@@ -75,28 +75,30 @@ Entry View for the application, launched when viewing an entry.
 
 ## Automated
 
-| ID | Logic               | Type   | Input | Output |
-| -- | ------------------- | ------ | ----- | ------ |
-| A1 | Save entry to diary | Normal |       |        |
-| A2 | Save goal to diary  | Normal |       |        |
-| A3 | Import markdown     | Normal |       |        |
+| ID | Logic               | Type   |
+| -- | ------------------- | ------ |
+| A1 | Save entry to diary | Normal |
+| A2 | Save goal to diary  | Normal |
+| A3 | Import markdown     | Normal |
+
+![Results](design/evidence/automated.png)
 
 ## Manual
 
-| ID  | Logic                 | Type   | Before | After |
-| --- | --------------------- | ------ | ------ | ----- |
-| M01 | Import markdown file  | Normal |        |       |
-| M03 | Add goal to diary     | Normal |        |       |
-| M04 | Add entry to diary    | Normal |        |       |
-| M05 | Remove entry          | Normal |        |       |
-| M06 | Insert text           | Normal |        |       |
-| M07 | Insert image          | Normal |        |       |
-| M08 | Insert heading        | Normal |        |       |
-| M09 | Change name of entry  | Normal |        |       |
-| M10 | Change date of entry  | Normal |        |       |
-| M12 | Go to view entry      | Normal |        |       |
-| M13 | Search entries        | Normal |        |       |
-| M14 | Back to diary view    | Normal |        |       |
+| ID  | Logic                 | Type   | Before                              | After                              |
+| --- | --------------------- | ------ | ----------------------------------- | ---------------------------------- |
+| M01 | Import markdown file  | Normal | ![](design/evidence/M01-Before.png) | ![](design/evidence/M01-After.png) |
+| M02 | Add goal to diary     | Normal | ![](design/evidence/M02-Before.png) | ![](design/evidence/M02-After.png) |
+| M03 | Add entry to diary    | Normal | ![](design/evidence/M03-Before.png) | ![](design/evidence/M03-After.png) |
+| M04 | Remove entry          | Normal | ![](design/evidence/M04-Before.png) | ![](design/evidence/M04-After.png) |
+| M05 | Insert text           | Normal | ![](design/evidence/M05-Before.png) | ![](design/evidence/M05-After.png) |
+| M06 | Insert image          | Normal | ![](design/evidence/M06-Before.png) | ![](design/evidence/M06-After.png) |
+| M07 | Insert heading        | Normal | ![](design/evidence/M07-Before.png) | ![](design/evidence/M07-After.png) |
+| M08 | Change name of entry  | Normal | ![](design/evidence/M08-Before.png) | ![](design/evidence/M08-After.png) |
+| M09 | Change date of entry  | Normal | ![](design/evidence/M09-Before.png) | ![](design/evidence/M09-After.png) |
+| M10 | Go to view entry      | Normal | ![](design/evidence/M10-Before.png) | ![](design/evidence/M10-After.png) |
+| M11 | Search entries        | Normal | ![](design/evidence/M11-Before.png) | ![](design/evidence/M11-After.png) |
+| M12 | Back to diary view    | Normal | ![](design/evidence/M12-Before.png) | ![](design/evidence/M12-After.png) |
 
 # Feedback
 

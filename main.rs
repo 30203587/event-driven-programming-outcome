@@ -38,7 +38,7 @@ use markdown::{
 
     tokenize,
 };
-use proptest::prelude::*;
+#[test] use proptest::prelude::*;
 
 // Constants
 
@@ -121,6 +121,11 @@ impl Diary {
         self.goals.push(goal)
     }
 }
+impl Entry {
+    fn upload_file(&self) {
+        todo!()
+    }
+}
 
 // Endpoints
 
@@ -191,9 +196,9 @@ fn fulfill_goal(diary: State<Mutex<Diary>>, goal: String, entry_name: String) {
 
 // Testing
 
-proptest! {
+#[test] proptest! {
     #[test]
-    fn test_insert_goal(input in "abcd") {
+    fn upload_file(input in "abcd") {
 	let mut diary = Diary {
 		entries: HashMap::new(),
 		goals: vec!(),
