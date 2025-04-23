@@ -104,23 +104,41 @@ Entry View for the application, launched when viewing an entry.
 
 ## Did the design meet the client requirements?
 
+The design closely followed the clients requirements when thinking about the UX
+of the program, including messages to help the user whenever possible.
+
 ## The initial design was peer reviewed, and feedback provided. Did this change your design or the way that you implemented the design? What did change?
 
 ## Did the UX testing highlight any possible improvements that could be made. Did the user testing uncover any bugs not detected in your functional testing?
 
 ## Anything that you would like to do differently or something that you thought worked well and you would do again?
 
+- The application relying on Tauri for its development went well as it
+  intergrated with the an OS' existing tooling.
+- Cargo made installing and testing different libraries easy across different platforms, making iterations quicker.
+
 # Documentation
+
+## Deployment
+
+The application can be installed by downloading the .msi file and double
+clicking it, the installer will run you through the installation process.
+
+## Compiling
+
+The application can be compiled by running "cargo tauri dev" within the root of
+the repository.
 
 ## Sources
 
 ### Mandatory
 
-| Purpose            | Name        | Link                                                                                       |
-| ------------------ | ----------- | ------------------------------------------------------------------------------------------ |
-| UI Logic           | Preact, htm | https://preactjs.com, https://unpkg.com/htm/preact/standalone.module.js                    |
-| UI Styling         | Tailwind    | https://tailwindcss.com, https://unpkg.com/@tailwindcss/browser@4.0.9/dist/index.global.js |
-| Cross Platform GUI | Tauri       | https://tauri.app                                                                          |
+| Purpose              | Name        | Link                                                                                       |
+| -------------------- | ----------- | ------------------------------------------------------------------------------------------ |
+| Programming Language | Rustup      | https://www.rust-lang.org/learn/get-started                                                |
+| UI Logic             | Preact, htm | https://preactjs.com, https://unpkg.com/htm/preact/standalone.module.js                    |
+| UI Styling           | Tailwind    | https://tailwindcss.com, https://unpkg.com/@tailwindcss/browser@4.0.9/dist/index.global.js |
+| Cross Platform GUI   | Tauri       | https://tauri.app                                                                          |
 
 ### Optional
 

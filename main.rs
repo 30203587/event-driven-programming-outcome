@@ -38,7 +38,7 @@ use markdown::{
 
     tokenize,
 };
-#[test] use proptest::prelude::*;
+#[cfg(test)] use proptest::prelude::*;
 
 // Constants
 
@@ -87,6 +87,7 @@ impl Diary {
                 Block::Paragraph(span) => for element in span {
                     sections.extend(Diary::match_span(element))
                 },
+
                 Block::UnorderedList(span) => {},
                 Block::Blockquote(span) => {},
                 Block::CodeBlock(_, _) => {},
@@ -196,15 +197,32 @@ fn fulfill_goal(diary: State<Mutex<Diary>>, goal: String, entry_name: String) {
 
 // Testing
 
-#[test] proptest! {
+#[cfg(test)] proptest! {
     #[test]
-    fn upload_file(input in "abcd") {
-	let mut diary = Diary {
-		entries: HashMap::new(),
-		goals: vec!(),
-	};
+    fn save_goal(input in "abcd") {
+        let mut diary = Diary {
+            entries: HashMap::new(),
+            goals: vec!(),
+        };
 
-	diary.insert_goal(input)
+        diary.insert_goal(input.clone());
+
+        let entry = diary.entries.get_mut(&input).unwrap();
+
+        entry.sections[0] = Element::Image(input.clone());
+
+        // Example of data writing to a file
+        let program_path = PathBuf::from(format!("{}/{PROGRAM_NAME}", var(HOME)?));
+        write(format!("{}/{input}", program_path.display()), [0]).unwrap();
+    }
+    #[test]
+    fn save_entry(input in "abcd") {
+        let mut diary = Diary {
+            entries: HashMap::new(),
+            goals: vec!(),
+        };
+
+        diary.insert_goal(input)
     }
     #[test]
     fn test_import_markdown(input in "# asdsa") {
@@ -257,7 +275,7 @@ fn main() {
 
             Ok(())
         })
-    .build(generate_context!())
+        .build(generate_context!())
         .unwrap()
         .run(|application, event| if let RunEvent::ExitRequested { .. } = event {
             // Gets the paths for used for the application, and writes the diary to it when the

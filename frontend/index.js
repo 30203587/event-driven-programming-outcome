@@ -274,6 +274,7 @@ function DiaryView(props) {
 
 	let entries_array = Object.entries(props.diary.entries);
 	for (let [key, value] of entries_array) {
+		// Matches inputed search against the name of the entry, using regex
 		if (key.match(new RegExp(searchName, "g"))) {
 			entries_display.push(html`<${Entry} name=${key} entry=${value} example=${false} setPage=${props.setPage} setDiary=${props.setDiary}/>`);
 		}
@@ -363,9 +364,10 @@ for (let i = 0; i < props.diary.entries[props.page[1]].sections.length; i++) {
 // Main
 
 function App() {
+	// Global states used across pages
 	let [diary, setDiary] = useState(null);
 	let [page, setPage]   = useState([PAGE_MANAGER, null]);
-	let [paths, setPaths]   = useState(null);
+	let [paths, setPaths] = useState(null);
 
 	useEffect(async () => {
 		let temp_diary = await invoke("read", {});
