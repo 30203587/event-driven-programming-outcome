@@ -41,7 +41,7 @@ keyboards, with the logo being with a diamond to symbolize it.
 
 # Diagrams
 
-![Use Case](target/use-case-diagram.svg)
+![Use Case](target/use-case.svg)
 
 Use case diagram for the function and non-function requirements.
 
@@ -54,11 +54,11 @@ State diagram for FR08.
 Logo for the application, converted to different formats based on target
 platform.
 
-![Diary View](design/diary-view.svg)
+![Diary View](design/diagrams/diary-view.svg)
 
 Diary View for the application, launched on startup.
 
-![Entry View](design/entry-view.svg)
+![Entry View](design/diagrams/entry-view.svg)
 
 Entry View for the application, launched when viewing an entry.
 
@@ -102,6 +102,10 @@ Entry View for the application, launched when viewing an entry.
 
 # Feedback
 
+## Likert Scale Questionnaires
+
+1. [Georgi Mirchev](design/evidence/georgi-mirchev.docx)
+
 ## Did the design meet the client requirements?
 
 The design closely followed the clients requirements when thinking about the UX
@@ -109,25 +113,41 @@ of the program, including messages to help the user whenever possible.
 
 ## The initial design was peer reviewed, and feedback provided. Did this change your design or the way that you implemented the design? What did change?
 
+The application UI's layout and the colour pallete was changed to make the
+applicaton more comprehensible.
+
 ## Did the UX testing highlight any possible improvements that could be made. Did the user testing uncover any bugs not detected in your functional testing?
+
+Some manual tests highlighted problems in the coherence of the application.
+Some bugs were found in development of the application using testing, the
+relevent tests were then updated to reflect the changes in the application.
 
 ## Anything that you would like to do differently or something that you thought worked well and you would do again?
 
 - The application relying on Tauri for its development went well as it
-  intergrated with the an OS' existing tooling.
+    intergrated with the an OS' existing tooling.
 - Cargo made installing and testing different libraries easy across different platforms, making iterations quicker.
 
 # Documentation
 
 ## Deployment
 
+### Windows
+
 The application can be installed by downloading the .msi file and double
 clicking it, the installer will run you through the installation process.
 
+### Linux
+
 ## Compiling
 
-The application can be compiled by running "cargo tauri dev" within the root of
-the repository.
+The application can be compiled by running
+
+```sh
+cargo run dev
+```
+
+within the root of the repository.
 
 ## Sources
 

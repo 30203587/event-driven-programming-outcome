@@ -1,0 +1,60 @@
+@startuml
+'left to right direction
+
+:Reviewer:
+:Student:
+
+package CRUD {
+	usecase "Add Entry"     as FR01
+	usecase "Delete entry"  as FR02
+	usecase "Edit an entry" as FR05
+	usecase "View an entry" as FR03
+}
+package Entries {
+	usecase "Graph of progress"    as FR07
+	usecase "Import markdown file" as FR08
+	usecase "Load entries"         as FR10
+	usecase "Reference SMART goal" as FR09
+	usecase "Save entries"         as FR06
+	usecase "Search entries"       as FR04
+}
+
+Reviewer -d.> FR03
+Reviewer -d.> FR04
+Reviewer -d.> FR06
+Reviewer -d.> FR07
+Reviewer -d.> FR09
+Student  -d.> FR01
+Student  -d.> FR02
+Student  -d.> FR03
+Student  -d.> FR04
+Student  -d.> FR05
+Student  -d.> FR06
+Student  -d.> FR08
+Student  -d.> FR09
+Student  -d.> FR10
+
+FR03 -d.> FR01 : <<includes>>
+FR05 -d.> FR01 : <<includes>>
+FR05 -d.> FR03 : <<includes>>
+FR06 -d.> FR01 : <<includes>>
+FR07 -d.> FR03 : <<includes>>
+FR07 -d.> FR05 : <<includes>>
+FR08 -d.> FR01 : <<includes>>
+FR09 -d.> FR05 : <<includes>>
+FR10 -d.> FR06 : <<includes>>
+
+note right of FR09
+	Trigger Event: Reference SMART GOAL
+	Pre-condition:
+	A student wants to reference a smart goal
+	Post-condition:
+	A reference to a SMART goal is created for a section
+
+	Normal:
+	1. The student creates a SMART goal
+	1. The student clicks a button to reference a smart goal
+	Exceptional:
+end note
+
+@enduml

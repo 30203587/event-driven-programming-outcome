@@ -6,14 +6,14 @@ import { html, render, useState, useEffect } from "/htm.js";
 const PAGE_ENTRY   = 1;
 const PAGE_MANAGER = 0;
 
-const COLOR_PRIMARY     = "#344966";
-const COLOR_SECONDARY   = "#FF6666";
+const COLOR_PRIMARY   = "#344966";
+const COLOR_SECONDARY = "#FF6666";
 
 const HELP_MESSAGE = `This is the diary view of the application, allowing you
 to add, delete and specific diary entries; create, delete and edit goals; search
 for entries; and create a diary entry from a markdown file.`
 
-// Functions
+// CRUD Functions
 
 async function add(setDiary, entry, key) {
 	await invoke("insert", {

@@ -1,4 +1,4 @@
-// Prevents additional console window on Windows in release, DO NOT REMOVE!!
+// Prevents additional console window on Windows in release
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // Imports
@@ -9,8 +9,11 @@ use std::{
         write,
         create_dir_all,
     },
+    collections::{
+        HashMap,
+        HashSet,
+    },
 
-    collections::HashMap,
     path::PathBuf,
     sync::Mutex,
     env::var,
@@ -71,11 +74,13 @@ struct Entry {
     month: u8, // Starts from 1 (1-12)
     year: u64,
     sections: Vec<Element>,
-    fulfilled_goals: HashMap<String, ()>,
+    fulfilled_goals: HashSet<String>,
 }
 
 
 impl Diary {
+    // Converts markdown to an AST of supported elements for rendering, later converted to JSON to
+    // store in the users home directory
     fn import_markdown(markdown: &str) -> Vec<Element> {
         let mut sections = vec!();
 
@@ -88,10 +93,11 @@ impl Diary {
                     sections.extend(Diary::match_span(element))
                 },
 
-                Block::UnorderedList(span) => {},
-                Block::Blockquote(span) => {},
-                Block::CodeBlock(_, _) => {},
-                Block::OrderedList(_, _) => {},
+                // Currently unsupported elements, they can be supported in future versions
+                Block::UnorderedList(_) => {},
+                Block::Blockquote(_) => {},
+                Block::CodeBlock(..) => {},
+                Block::OrderedList(..) => {},
                 Block::Raw(_) => {},
                 Block::Hr => {},
             }
@@ -99,6 +105,7 @@ impl Diary {
 
         sections
     }
+    // Matches an individual span element
     fn match_span(span: Span) -> Vec<Element> {
         let mut elements = vec!();
 
@@ -120,11 +127,6 @@ impl Diary {
     }
     fn insert_goal(&mut self, goal: String) {
         self.goals.push(goal)
-    }
-}
-impl Entry {
-    fn upload_file(&self) {
-        todo!()
     }
 }
 
@@ -149,6 +151,7 @@ fn remove(state: State<Mutex<Diary>>, key: &str) {
 }
 #[tauri::command]
 fn set_date(state: State<Mutex<Diary>>, entry: &str, day: u8, month: u8, year: u64) {
+    // Sets the date of an entry, according to their representation in Javascript
     let mut state = state.lock().unwrap();
     let entry = state.entries.get_mut(entry).unwrap();
 
@@ -188,10 +191,10 @@ fn fulfill_goal(diary: State<Mutex<Diary>>, goal: String, entry_name: String) {
     let mut diary = diary.lock().unwrap();
     let entry = diary.entries.get_mut(&entry_name).unwrap();
 
-    if entry.fulfilled_goals.contains_key(&goal) {
+    if entry.fulfilled_goals.contains(&goal) {
         entry.fulfilled_goals.remove(&goal);
     } else {
-        entry.fulfilled_goals.insert(goal, ());
+        entry.fulfilled_goals.insert(goal);
     }
 }
 
@@ -211,7 +214,7 @@ fn fulfill_goal(diary: State<Mutex<Diary>>, goal: String, entry_name: String) {
 
         entry.sections[0] = Element::Image(input.clone());
 
-        // Example of data writing to a file
+        // Example of writing data to a file
         let program_path = PathBuf::from(format!("{}/{PROGRAM_NAME}", var(HOME)?));
         write(format!("{}/{input}", program_path.display()), [0]).unwrap();
     }

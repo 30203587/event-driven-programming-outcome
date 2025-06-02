@@ -4,13 +4,13 @@ state Diary_Exists <<choice>>
 
 [*] -> Diary_Exists : Import Markdown
 
-Diary_Exists -> Error : Exists
-Error --> [*]
+Diary_Exists -> Report_Error : Entry Exists
+Report_Error --> [*]
 
 state Tokenize {
 	state Match_Token <<choice>>
 
-	Diary_Exists -> Loop_Over_Tokens : Doesnt Exist
+	Diary_Exists -> Loop_Over_Tokens : Entry Doesn't Exist
 	Loop_Over_Tokens -> Match_Token
 
 	Match_Token -> Add_Section_Element : Heading -> Heading
@@ -20,7 +20,9 @@ state Tokenize {
 	Add_Section_Element -> Loop_Over_Tokens
 }
 
-Loop_Over_Tokens -> Create_New_Entry : If Done Looping
+Loop_Over_Tokens -> Create_New_Entry : If run out of tokens
 Create_New_Entry --> [*]
+
+note bottom of Match_Token : The choice depicts how each token is mapped to its supported representation within the application
 
 @enduml
