@@ -139,15 +139,25 @@ clicking it, the installer will run you through the installation process.
 
 ### Linux
 
+The application doesn't need further configuration and can be run just by
+executing the "metakey" file, using either a graphical file manager or from the
+terminal.
+
 ## Compiling
 
-The application can be compiled by running
+The application can be compiled by running the following command within the root of the repository.
 
 ```sh
 cargo run dev
 ```
 
-within the root of the repository.
+build.rs containts code to automatically convert the logo to the relevant
+platforms' format, if the build fails use the following command to build for
+your relevant platform.
+
+```sh
+convert -density 300 icon:auto-resize=256,128,96,64,48,32,16 -background none frontend/logo.svg target/icon.ico
+```
 
 ## Sources
 

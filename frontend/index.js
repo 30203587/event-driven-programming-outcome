@@ -11,9 +11,11 @@ const COLOR_SECONDARY = "#FF6666";
 
 const HELP_MESSAGE = `This is the diary view of the application, allowing you
 to add, delete and specific diary entries; create, delete and edit goals; search
-for entries; and create a diary entry from a markdown file.`
+for entries; and create a diary entry from a markdown file.`;
 
 // CRUD Functions
+
+//// Asynchronous
 
 async function add(setDiary, entry, key) {
 	await invoke("insert", {
@@ -60,47 +62,25 @@ async function removeGoal(index, setDiary) {
 		return {...diary}
 	});
 }
-function addSection(setDiary, key, value) {
-	setDiary(diary => {
-		diary.entries[key].sections.push(value);
-
-		invoke("insert", {
-			key: key,
-			value: diary.entries[key],
-		});
-
-		return {...diary}
-	})
-}
-function removeSection(setDiary, key, index) {
-	setDiary(diary => {
-		diary.entries[key].sections.splice(index, 1);
-
-		invoke("insert", {
-			key: key,
-			value: diary.entries[key],
-		});
-
-		return { ...diary }
-	})
-}
 async function uploadFile(event, setDiary, index, key) {
 	let file = event.target.files[0];
 
-	await invoke("upload_file", {
-		name: file.name,
-		index: index,
-		key: key,
-		data: await file.arrayBuffer(),
-	}).then(() => {})
-	.catch((error) => console.log(error))
+	try {
+		await invoke("upload_file", {
+			name: file.name,
+			index: index,
+			key: key,
+			data: await file.arrayBuffer(),
+		}).then(() => {})
+	} catch (error) {
+		alert(error);
+	}
 
 	setDiary(diary => {
 		diary.entries[key].sections[index]["Image"] = file.name;
 
 		return { ...diary }
 	})
-
 }
 async function import_markdown(event, setDiary) {
 	let data = await event.target.files[0].text();
@@ -126,6 +106,70 @@ async function import_markdown(event, setDiary) {
 		diary.entries[key] = default_entry;
 
 		return {...diary}
+	})
+}
+async function setGoalName(setDiary, index, value) {
+	invoke("set_goal_name", {
+		index: index,
+		value: value,
+	})
+
+	setDiary(diary => {
+		let old_value = diary.goals[index];
+		diary.goals[index] = value;
+
+		for (let key of Object.keys(diary.entries)) {
+			if (diary.entries[key].fulfilled_goals[old_value] !== undefined) {
+				delete diary.entries[key].fulfilled_goals[old_value];
+				diary.entries[key].fulfilled_goals[value] = {};
+			}
+		}
+
+		return { ...diary }
+	})
+}
+async function fulfillGoal(event, goal_name, setDiary, entry_name) {
+	await invoke("fulfill_goal", {
+		entryName: entry_name,
+		goal: goal_name,
+	});
+
+	setDiary(diary => {
+		if (event.target.checked) {
+			diary.entries[entry_name].fulfilled_goals[goal_name] = [];
+		} else {
+			delete diary.entries[entry_name].fulfilled_goals[goal_name];
+		}
+		console.log(diary);
+
+		return { ...diary }
+	})
+}
+
+//// Synchronous
+
+function addSection(setDiary, key, value) {
+	setDiary(diary => {
+		diary.entries[key].sections.push(value);
+
+		invoke("insert", {
+			key: key,
+			value: diary.entries[key],
+		});
+
+		return {...diary}
+	})
+}
+function removeSection(setDiary, key, index) {
+	setDiary(diary => {
+		diary.entries[key].sections.splice(index, 1);
+
+		invoke("insert", {
+			key: key,
+			value: diary.entries[key],
+		});
+
+		return { ...diary }
 	})
 }
 function insertText(text, setDiary, index, name) {
@@ -171,47 +215,10 @@ function setDate(date, setDiary, name) {
 		return {...diary}
 	})
 }
-async function setGoalName(setDiary, index, value) {
-	invoke("set_goal_name", {
-		index: index,
-		value: value,
-	})
-
-	setDiary(diary => {
-		let old_value = diary.goals[index];
-		diary.goals[index] = value;
-
-		for (let key of Object.keys(diary.entries)) {
-			if (diary.entries[key].fulfilled_goals[old_value] !== undefined) {
-				delete diary.entries[key].fulfilled_goals[old_value];
-				diary.entries[key].fulfilled_goals[value] = {};
-			}
-		}
-
-		return { ...diary }
-	})
-}
-async function fulfillGoal(event, goal_name, setDiary, entry_name) {
-	await invoke("fulfill_goal", {
-		entryName: entry_name,
-		goal: goal_name,
-	});
-
-	setDiary(diary => {
-		if (event.target.checked) {
-			diary.entries[entry_name].fulfilled_goals[goal_name] = [];
-		} else {
-			delete diary.entries[entry_name].fulfilled_goals[goal_name];
-		}
-		console.log(diary);
-
-		return { ...diary }
-	})
-}
 
 // Elements
 
-//// Diary View (design/diary-view.svg)
+//// Diary View
 
 function Element(props) {
 	let contents;
@@ -320,7 +327,7 @@ function DiaryView(props) {
 	</div>`;
 }
 
-//// Entry View (design/entry-view.svg)
+//// Entry View
 
 function EntryView(props) {
 	let display_elements = [];
