@@ -229,6 +229,7 @@ fn fulfill_goal(diary: State<Mutex<Diary>>, goal: String, entry_name: String) {
     }
     #[test]
     fn test_import_markdown(input in "# asdsa") {
+        proptest::string::string_regex("[a-zA-Z]+").unwrap()
         Diary::import_markdown(&input);
     }
 }

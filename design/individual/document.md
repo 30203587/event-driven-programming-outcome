@@ -1,3 +1,34 @@
+# Table of Contents
+
+- Description (#description)
+- User Stories (#user-stories)
+-- Types of Users (#users)
+-- Examples (#examples)
+- Requirements (#requirements)
+- Diagrams (#diagrams)
+- MoSCoW (#moscow)
+- Testing (#testing)
+-- Automated (#automated)
+-- Manual (#manual)
+- Feedback (#feedback)
+-- Likert Scale Questionnaires (#likert-scale-questionnaires)
+-- Reflection 1 (#reflection-1)
+-- Reflection 2 (#reflection-2)
+-- Reflection 3 (#reflection-3)
+-- Reflection 4 (#reflection-4)
+- Documentation (#documentation)
+-- Deployment (#deployment)
+--- Windows (#Windows)
+--- Linux (#linux)
+-- Compiling (#compiling)
+-- Sources (#sources)
+--- Mandatory (#mandatory)
+--- Optional (#optional)
+--- External (#external)
+-- Evaluation (#evaluation)
+- Meetings (#meetings)
+-- 18/03/2025 (#18/03/2025)
+
 # Description
 
 The application itself is to be made for students who are looking to document
@@ -9,6 +40,13 @@ course. The application is called MetaKey, named after the meta key on old
 keyboards, with the logo being with a diamond to symbolize it.
 
 # User Stories
+
+## Types of Users
+
+- Student, the primary user of the program, someone who wants to stack their progress of their meta skills goals.
+- Reviewer, a reviewer of a single students meta skills.
+
+## Examples
 
 - As a reviewer, I want to be able to view progress on a students meta skills over time.
 - As a reviewer, I want to be able view details on a specific diary entry.
@@ -106,27 +144,38 @@ Entry View for the application, launched when viewing an entry.
 
 1. [Georgi Mirchev](design/evidence/georgi-mirchev.docx)
 
-## Did the design meet the client requirements?
+## Reflection 1
+
+Description: Did the design meet the client requirements?
 
 The design closely followed the clients requirements when thinking about the UX
 of the program, including messages to help the user whenever possible.
 
-## The initial design was peer reviewed, and feedback provided. Did this change your design or the way that you implemented the design? What did change?
+## Reflection 2
 
-The application UI's layout and the colour pallete was changed to make the
-applicaton more comprehensible.
+Description: The initial design was peer reviewed, and feedback provided. Did this change your design or the way that you implemented the design? What did change?
 
-## Did the UX testing highlight any possible improvements that could be made. Did the user testing uncover any bugs not detected in your functional testing?
+The application UI's layout and the colour palette was changed to make the
+application more comprehensible to the average user. This involved making new
+colour schemes with [Coolors](https://coolors.co) and seeing how they would
+display given example UI elements.
+
+## Reflection 3
+
+Description: Did the UX testing highlight any possible improvements that could be made. Did the user testing uncover any bugs not detected in your functional testing?
 
 Some manual tests highlighted problems in the coherence of the application.
 Some bugs were found in development of the application using testing, the
-relevent tests were then updated to reflect the changes in the application.
+relevant tests were then updated to reflect the changes in the application.
 
-## Anything that you would like to do differently or something that you thought worked well and you would do again?
+## Reflection 4
+
+Description: Anything that you would like to do differently or something that you thought worked well and you would do again?
 
 - The application relying on Tauri for its development went well as it
-    intergrated with the an OS' existing tooling.
+    integrated with the OS' existing tooling.
 - Cargo made installing and testing different libraries easy across different platforms, making iterations quicker.
+- A bigger unification of tooling across both the back-end and front-end, ideally the GUI would make use of an rust library to make it more scalable and stable.
 
 # Documentation
 
@@ -145,19 +194,27 @@ terminal.
 
 ## Compiling
 
-The application can be compiled by running the following command within the root of the repository.
+The application primarily requires the installation of
+[Tauri](https://v2.tauri.app), check the relevant installation guide found on
+their website. The application can be compiled by running the following command within the
+root of the repository.
 
 ```sh
-cargo run dev
+cargo tauri dev
 ```
 
-build.rs containts code to automatically convert the logo to the relevant
+The build.rs contains code to automatically convert the logo to the relevant
 platforms' format, if the build fails use the following command to build for
-your relevant platform.
+your relevant platform if ImageMagick is installed in your "PATH" environment
+variable.
 
 ```sh
 convert -density 300 icon:auto-resize=256,128,96,64,48,32,16 -background none frontend/logo.svg target/icon.ico
 ```
+
+Otherwise manual conversions are required via use of an external tool of your
+choice, placing the converted file into target/icon.ico (create the target
+directory if it doesn't already exist).
 
 ## Sources
 
@@ -168,13 +225,20 @@ convert -density 300 icon:auto-resize=256,128,96,64,48,32,16 -background none fr
 | Programming Language | Rustup      | https://www.rust-lang.org/learn/get-started                                                |
 | UI Logic             | Preact, htm | https://preactjs.com, https://unpkg.com/htm/preact/standalone.module.js                    |
 | UI Styling           | Tailwind    | https://tailwindcss.com, https://unpkg.com/@tailwindcss/browser@4.0.9/dist/index.global.js |
-| Cross Platform GUI   | Tauri       | https://tauri.app                                                                          |
+| Cross Platform GUI   | Tauri       | https://v2.tauri.app                                                                       |
 
 ### Optional
 
 | Purpose            | Name        | Link                    |
 | ------------------ | ----------- | ----------------------- |
 | Logo Conversions   | ImageMagick | https://imagemagick.org |
+
+### External
+
+| Purpose        | Name    | Link               |
+| -------------- | ------- | ------------------ |
+| Colour Palette | Coolors | https://coolors.co |
+| Wireframes     | Draw.io | https://draw.io    |
 
 ## Evaluation
 
@@ -186,9 +250,9 @@ convert -density 300 icon:auto-resize=256,128,96,64,48,32,16 -background none fr
 - Attendees: Alan Hart
 - Topic: Review User Interface (UI) design documentation and requirements document
 
-- [x] Non func reqs, can you make them all specific. ie 'not within budget' but 'within budget amount of £0'
-- [x] Wireframes. How do you add new goals? 
-- [x] Need extra commentary on how to select a task and move to the next screen, and move back.
-- [x] Decide on name of second screen so that it can be consistently referred to in the documentation.
-- [x] user diagram missing extend and include commentary
-- [x] Needs state diagram added before final submission
+- Non func reqs, can you make them all specific. ie 'not within budget' but 'within budget amount of £0'
+- Wireframes. How do you add new goals? 
+- Need extra commentary on how to select a task and move to the next screen, and move back.
+- Decide on name of second screen so that it can be consistently referred to in the documentation.
+- user diagram missing extend and include commentary
+- Needs state diagram added before final submission
