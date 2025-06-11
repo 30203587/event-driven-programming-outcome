@@ -36,7 +36,6 @@ async function add(setDiary, entry, key) {
 	setDiary(diary => {
 		diary.entries[key] = entry;
 
-		cc
 		return {...diary}
 	})
 }
@@ -180,7 +179,7 @@ async function setDate(date, setDiary, name) {
 			month: month,
 			year: year,
 		});
-	catch (error) {
+	} catch (error) {
 		alert(error)
 	}
 

@@ -288,11 +288,21 @@ fn set_date_boundary() -> Result<(), String> {
 #[should_panic]
 fn set_date_exceptional() {
     let mut diary = Diary {
-        entries: HashMap::new(),
+        entries: HashMap::from([
+            ("example".into(), Entry {
+                day: NonZeroU8::new(1).unwrap(),
+                month: NonZeroU8::new(1).unwrap(),
+                year: 0,
+                sections: vec!(Element::Text("example".to_string())),
+                fulfilled_goals: HashMap::new(),
+            })
+        ]),
         goals: vec!(),
     };
 
-    diary.set_date("re", NonZeroU8::new(0).unwrap(), NonZeroU8::new(1).unwrap(), 4).unwrap();
+    diary.set_date("", NonZeroU8::new(0).unwrap(), NonZeroU8::new(1).unwrap(), 0).unwrap();
+    diary.set_date("", NonZeroU8::new(0).unwrap(), NonZeroU8::new(1).unwrap(), 0).unwrap();
+    diary.set_date("", NonZeroU8::new(1).unwrap(), NonZeroU8::new(1).unwrap(), 0).unwrap();
 }
 
 // Endpoints

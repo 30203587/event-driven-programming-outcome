@@ -1,6 +1,6 @@
 # Table of Contents
 
-> [Description](#description)
+> [Scenario Description](#scenario-description)
 >
 > [User Stories](#user-stories)
 >
@@ -34,7 +34,7 @@
 >
 > [Installation](#installation)
 >
->> [Windows](#Windows)
+>> [Windows](#windows)
 >>
 >> [Linux](#linux)
 >
@@ -47,10 +47,6 @@
 > [Sources](#sources)
 >
 > [Examples](#examples)
->
->> [Diary View](#diary-view)
->>
->> [Entry View](#entry-view)
 >
 >> [Mandatory](#mandatory)
 >>
@@ -174,7 +170,7 @@ each category the function belongs to.
 - set_date_boundary
 - set_date_exceptional
 
-![Results](design/evidence/automated.png)
+![Automated](design/evidence/automated.png)
 
 Test cases can be found in the main.rs file, the screenshot is taken from
 running the following command inside a terminal window.
@@ -234,7 +230,7 @@ Description: Did the UX testing highlight any possible improvements that could
 be made. Did the user testing uncover any bugs not detected in your functional
 testing?
 
-- Problems we're highlighted as to the coherence of the application
+- Problems were highlighted as to the coherence of the application
 - Found file uploads were not uploading images correctly
 
 > The relevant tests were updated to reflect the changes in the application.
@@ -321,11 +317,11 @@ pandoc -t html README.md -o target/README.pdf
 
 # Examples
 
-## Diary View
+![diary-view](design/evidence/diary-view.png)
 
-![diary-view-1](design/evidence/diary-view-1.png)
+Diary View
 
-## Entry View
+![entry-view](design/evidence/entry-view.png)
 
 # Sources
 
